@@ -2,7 +2,7 @@
    API bir xil domenda ishlaydi deb hisoblanadi ("/api"). Agar frontend
    boshqa domenda joylashtirilsa, quyidagi API_BASE'ni to'liq manzilga
    o'zgartiring, masalan: "https://api.hanzodev.uz/api" */
-const API_BASE = "https://umarovgroup.uz/api";
+const API_BASE = "/api";
 
 async function apiGet(path) {
   const res = await fetch(`${API_BASE}${path}`, { headers: { Accept: "application/json" } });

@@ -1,0 +1,65 @@
+/* ---------- Admin panel — sayt dizayniga mos uslub ---------- */
+.admin-login-wrap {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background:
+    radial-gradient(circle at 15% 15%, #fbe8cf 0%, transparent 45%),
+    linear-gradient(135deg, #dce9ff 0%, #b9cdfa 35%, #5b7fe0 70%, #24408f 100%);
+}
+.admin-login-card {
+  width: 360px; background: rgba(255,255,255,0.85); backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.6); border-radius: 24px; padding: 40px 34px;
+}
+.admin-login-title { font-size: 26px; font-weight: 800; margin: 0 0 6px; color: var(--text-dark); }
+.admin-login-sub { color: var(--text-muted); margin: 0 0 24px; font-size: 14px; }
+
+.admin-wrap { display: flex; min-height: 100vh; }
+.admin-sidebar {
+  width: 260px; flex-shrink: 0; background: rgba(255,255,255,0.7); backdrop-filter: blur(24px);
+  border-right: 1px solid rgba(0,0,0,0.06); padding: 26px 20px; display: flex; flex-direction: column;
+}
+.admin-brand { font-size: 19px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; }
+.admin-user { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+.admin-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; overflow-y: auto; }
+.admin-nav a {
+  padding: 10px 14px; border-radius: 10px; color: var(--text-dark); text-decoration: none;
+  font-size: 14.5px; font-weight: 500;
+}
+.admin-nav a:hover { background: #eef1f8; }
+.admin-nav a.active { background: var(--accent); color: #fff; }
+.admin-sidebar-footer { display: flex; flex-direction: column; gap: 10px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.06); }
+.admin-link-muted { color: var(--text-muted); text-decoration: none; font-size: 13.5px; }
+.admin-btn-logout { background: #fdeaea; color: #b3261e; border: none; border-radius: 10px; padding: 9px; font-weight: 600; cursor: pointer; }
+
+.admin-content { flex: 1; padding: 34px 40px; overflow-y: auto; max-height: 100vh; }
+.admin-title { font-size: 24px; font-weight: 800; margin: 0 0 20px; color: var(--text-dark); }
+.admin-list-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+
+.admin-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 14px; overflow: hidden; }
+.admin-table th, .admin-table td { text-align: left; padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #eef1f8; }
+.admin-table th { background: #f6f8fc; color: var(--text-muted); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; }
+.admin-row-actions { display: flex; gap: 8px; white-space: nowrap; }
+
+.admin-btn-sm { border: 1px solid #dde3f2; background: #fff; color: var(--text-dark); border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+.admin-btn-sm:hover { background: #f6f8fc; }
+.admin-btn-danger { color: #b3261e; border-color: #f3c9c9; }
+.admin-btn-danger:hover { background: #fdeaea; }
+
+.admin-form { background: #fff; border-radius: 16px; padding: 24px; margin: 18px 0 26px; display: flex; flex-direction: column; gap: 16px; }
+.admin-form h3 { margin: 0 0 4px; font-size: 17px; }
+.admin-field { display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; color: var(--text-muted); }
+.admin-field input[type=text], .admin-field input[type=email], .admin-field input[type=url],
+.admin-field input[type=number], .admin-field input[type=date], .admin-field input[type=datetime-local],
+.admin-field select, .admin-field textarea {
+  border: 1px solid #e3e7f3; border-radius: 10px; padding: 10px 12px; font-size: 14.5px; font-family: inherit; color: var(--text-dark);
+}
+.admin-field select[multiple] { min-height: 96px; }
+.admin-field-checkbox { flex-direction: row; align-items: center; gap: 10px; }
+.admin-field-checkbox input { width: 18px; height: 18px; }
+.admin-image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; margin-bottom: 6px; }
+.admin-form-actions { display: flex; gap: 12px; align-items: center; }
+
+@media (max-width: 900px) {
+  .admin-wrap { flex-direction: column; }
+  .admin-sidebar { width: 100%; }
+  .admin-content { padding: 22px; }
+}
