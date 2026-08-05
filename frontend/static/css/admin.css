@@ -1,6 +1,7 @@
 /* ---------- Admin panel — sayt dizayniga mos uslub ---------- */
 .admin-login-wrap {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 20px;
   background:
     radial-gradient(circle at 15% 15%, #fbe8cf 0%, transparent 45%),
     linear-gradient(135deg, #dce9ff 0%, #b9cdfa 35%, #5b7fe0 70%, #24408f 100%);
@@ -50,7 +51,7 @@
 .admin-field input[type=text], .admin-field input[type=email], .admin-field input[type=url],
 .admin-field input[type=number], .admin-field input[type=date], .admin-field input[type=datetime-local],
 .admin-field select, .admin-field textarea {
-  border: 1px solid #e3e7f3; border-radius: 10px; padding: 10px 12px; font-size: 14.5px; font-family: inherit; color: var(--text-dark);
+  width: 100%; border: 1px solid #e3e7f3; border-radius: 10px; padding: 10px 12px; font-size: 14.5px; font-family: inherit; color: var(--text-dark);
 }
 .admin-field select[multiple] { min-height: 96px; }
 .admin-field-checkbox { flex-direction: row; align-items: center; gap: 10px; }
@@ -59,7 +60,34 @@
 .admin-form-actions { display: flex; gap: 12px; align-items: center; }
 
 @media (max-width: 900px) {
-  .admin-wrap { flex-direction: column; }
-  .admin-sidebar { width: 100%; }
-  .admin-content { padding: 22px; }
+  .admin-wrap { flex-direction: column; min-height: auto; }
+  .admin-sidebar {
+    width: 100%; flex-direction: row; flex-wrap: nowrap; align-items: center;
+    padding: 14px 16px; gap: 14px; overflow-x: auto; border-right: none;
+    border-bottom: 1px solid rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 10;
+  }
+  .admin-brand, .admin-user { display: none; }
+  .admin-nav { flex-direction: row; flex: none; gap: 6px; overflow-x: auto; overflow-y: visible; -webkit-overflow-scrolling: touch; }
+  .admin-nav a { white-space: nowrap; padding: 8px 12px; font-size: 13.5px; }
+  .admin-sidebar-footer { flex-direction: row; flex-shrink: 0; padding-top: 0; border-top: none; padding-left: 10px; border-left: 1px solid rgba(0,0,0,0.08); }
+  .admin-link-muted { display: none; }
+  .admin-btn-logout { padding: 8px 12px; font-size: 13px; white-space: nowrap; }
+
+  .admin-content { padding: 18px; max-height: none; overflow-y: visible; }
+  .admin-title { font-size: 20px; }
+  .admin-list-head { flex-direction: column; align-items: stretch; gap: 12px; }
+  .admin-list-head .btn-send { width: 100%; justify-content: center; }
+
+  .admin-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 14px; }
+  .admin-table { min-width: 640px; }
+
+  .admin-form { padding: 18px; }
+  .admin-form-actions { flex-direction: column-reverse; align-items: stretch; }
+  .admin-form-actions .btn-send, .admin-form-actions .admin-btn-sm { width: 100%; justify-content: center; }
+  .admin-image-preview { width: 80px; height: 80px; }
+}
+
+@media (max-width: 420px) {
+  .admin-login-card { width: 100%; padding: 28px 22px; }
+  .admin-content { padding: 14px; }
 }

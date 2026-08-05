@@ -256,12 +256,68 @@ body.has-bg-image {
 .post-cover img { width: 100%; display: block; }
 
 @media (max-width: 980px) {
-  .page-wrap { flex-direction: column; padding: 20px; }
+  .page-wrap { flex-direction: column; padding: 20px; gap: 18px; }
   .sidebar { width: 100%; }
   .content-panel { padding: 24px; }
   .nav-tabs { justify-content: flex-start; flex-wrap: wrap; gap: 18px; }
-  .card-grid-2, .inside-grid, .portfolio-grid, .thread-grid, .form-grid { grid-template-columns: 1fr; }
+  .card-grid-2, .form-grid { grid-template-columns: 1fr; }
+  .inside-grid, .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+@media (max-width: 640px) {
+  .inside-grid, .portfolio-grid, .thread-grid { grid-template-columns: 1fr; }
+
+  .page-wrap { padding: 12px; gap: 14px; }
+  .sidebar { padding: 24px 20px; border-radius: var(--radius-md); }
+  .avatar-frame { width: 140px; height: 140px; }
+  .profile-name { font-size: 22px; }
+  .profile-badge { font-size: 13px; padding: 6px 14px; }
+  .contact-icon { width: 36px; height: 36px; }
+  .contact-icon svg { width: 17px; height: 17px; }
+  .contact-value { font-size: 14px; }
+  .social-row a { width: 34px; height: 34px; flex-basis: 34px; }
+
+  .content-panel { padding: 18px; border-radius: var(--radius-md); min-height: 0; }
+  .nav-tabs { gap: 14px; padding-bottom: 14px; margin-bottom: 20px; }
+  .nav-tabs a { font-size: 14px; }
+  .page-title { font-size: 24px; }
+  .title-underline { margin-bottom: 20px; }
+  .section-title { font-size: 19px; margin: 28px 0 14px; }
+  .lead-text { font-size: 14.5px; }
+
+  .card { padding: 18px; }
+  .card-grid-2 { gap: 14px; }
+  .card-grid-2 .card { flex-direction: column; }
+  .inside-grid { gap: 14px; }
+
+  .skills-card { padding: 20px; }
+  .journey-list { padding-left: 20px; }
+  .journey-item::before { left: -26px; }
+
+  .filter-tabs { gap: 16px 20px; }
+  .portfolio-grid, .thread-grid { gap: 16px; }
+  .thread-card { padding: 18px; }
+
+  .contact-card { padding: 20px; }
+  .contact-heading { font-size: 20px; }
+  .form-grid { grid-template-columns: 1fr; gap: 10px; margin-bottom: 10px; }
+  .btn-send { width: 100%; justify-content: center; }
+
+  .comment-item { padding: 14px 16px; }
+  .comment-item .c-name, .comment-item .c-date { display: block; }
+  .comment-item .c-date { margin-top: 2px; }
+}
+
+@media (max-width: 400px) {
+  .avatar-frame { width: 110px; height: 110px; }
+  .profile-name { font-size: 19px; }
+  .page-title { font-size: 21px; }
+  .nav-tabs { gap: 10px; }
+  .nav-tabs a { font-size: 13px; }
+}
+
+/* rasm/media hech qachon konteynerdan tashqariga chiqmasin */
+img, video { max-width: 100%; height: auto; }
 
 /* ---------- SPA helpers ---------- */
 .hidden { display: none !important; }

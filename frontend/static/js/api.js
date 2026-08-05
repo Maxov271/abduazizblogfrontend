@@ -1,7 +1,7 @@
 /* Barcha backend (Django REST API) bilan aloqa shu faylda.
    API bir xil domenda ishlaydi deb hisoblanadi ("/api"). Agar frontend
    boshqa domenda joylashtirilsa, quyidagi API_BASE'ni to'liq manzilga
-   o'zgartiring, masalan: "https://api.hanzodev.uz/api" */
+   o'zgartiring, masalan: "https://api.umarovgroup.uz.uz/api" */
 const API_BASE = "https://devopsurol.alwaysdata.net/api";
 
 async function apiGet(path) {
