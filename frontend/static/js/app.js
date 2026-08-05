@@ -1,4 +1,4 @@
-/* Hanzo-Dev tipidagi SPA frontend. Hash-router: #/about #/resume
+/* Umarov-group tipidagi SPA frontend. Hash-router: #/about #/resume
    #/portfolio #/portfolio/<slug> #/thread #/thread/<slug> */
 
 let contentEl, navTabsEl, sidebarEl;
@@ -17,7 +17,7 @@ function nl2br(str) {
 async function renderSidebar() {
   try {
     const [profile, socials] = await Promise.all([Api.profile(), Api.socialLinks()]);
-    document.title = profile.display_name || "Hanzo-Dev";
+    document.title = profile.display_name || "Umarov-group";
 
     const avatar = profile.avatar
       ? `<img src="${profile.avatar}" alt="${esc(profile.display_name)}">`

@@ -225,7 +225,7 @@ function loginScreenHtml(errorMsg) {
     <div class="admin-login-wrap">
       <form class="admin-login-card" id="admin-login-form">
         <h1 class="admin-login-title">Admin panel</h1>
-        <p class="admin-login-sub">Hanzo-Dev boshqaruv paneliga kirish</p>
+        <p class="admin-login-sub">Umarov-group boshqaruv paneliga kirish</p>
         ${errorMsg ? `<div class="alert alert-error">${esc2(errorMsg)}</div>` : ""}
         <input class="form-input" type="text" name="username" placeholder="Login" required autofocus>
         <input class="form-input" type="password" name="password" placeholder="Parol" required style="margin-top:14px">
