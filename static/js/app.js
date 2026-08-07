@@ -215,7 +215,7 @@ async function routeResume() {
         ${skills.map(g => `
           <div class="skill-row">
             <div class="skill-label"><b>${esc(g.label)}:</b> ${esc(g.items)}</div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:${g.level_percent}%"></div></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-level="${g.level_percent}"></div></div>
           </div>`).join("")}
       </div>` : "";
 
@@ -239,9 +239,18 @@ async function routeResume() {
       ${skillsHtml}
       ${journeyHtml}
     `;
+    animateSkillBars();
   } catch (e) {
     contentEl.innerHTML = `<p class="loading-text">Ma'lumot yuklanmadi.</p>`;
   }
+}
+
+/* Skill barlarini 0 dan haqiqiy qiymatigacha animatsiya bilan to'ldiradi */
+function animateSkillBars() {
+  const bars = contentEl.querySelectorAll(".skill-bar-fill");
+  requestAnimationFrame(() => {
+    bars.forEach(bar => { bar.style.width = `${bar.dataset.level}%`; });
+  });
 }
 
 /* ---------------- Route: Portfolio list ---------------- */
