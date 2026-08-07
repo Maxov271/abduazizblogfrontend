@@ -37,12 +37,26 @@ async function renderSidebar() {
       : "";
 
     sidebarEl.innerHTML = `
-      <div class="avatar-frame">${avatar}</div>
-      <div class="profile-name">${esc(profile.display_name)}</div>
-      <div class="profile-badge">${esc(profile.title)}</div>
-      <div class="contact-info">${rows.join("")}</div>
-      ${socialsHtml}
+      <button type="button" class="show-contacts-btn" id="show-contacts-btn" aria-expanded="false">Show Contacts</button>
+      <div class="sidebar-main">
+        <div class="avatar-frame">${avatar}</div>
+        <div class="sidebar-heading">
+          <div class="profile-name">${esc(profile.display_name)}</div>
+          <div class="profile-badge">${esc(profile.title)}</div>
+        </div>
+      </div>
+      <div class="contact-panel" id="contact-panel">
+        <div class="contact-info">${rows.join("")}</div>
+        ${socialsHtml}
+      </div>
     `;
+
+    const toggleBtn = document.getElementById("show-contacts-btn");
+    toggleBtn.addEventListener("click", () => {
+      const isOpen = sidebarEl.classList.toggle("contacts-open");
+      toggleBtn.setAttribute("aria-expanded", String(isOpen));
+      toggleBtn.textContent = isOpen ? "Hide Contacts" : "Show Contacts";
+    });
   } catch (e) {
     sidebarEl.innerHTML = `<p class="loading-text">Profil yuklanmadi.</p>`;
   }
