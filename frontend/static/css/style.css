@@ -310,6 +310,7 @@ body.has-bg-image {
 .filter-tabs a:hover { color: var(--accent); }
 .filter-tabs a.active { color: var(--accent); font-weight: 700; }
 .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 26px; }
+.portfolio-gallery-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
 .portfolio-card { display: block; text-decoration: none; color: inherit; animation: fadeInUp .5s var(--ease) both; }
 .portfolio-thumb {
   border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 16/10.2;
