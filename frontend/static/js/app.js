@@ -308,7 +308,7 @@ async function routePortfolioDetail(slug) {
     const tagsHtml = p.tags.length ? `<div class="tag-row" style="margin-top:22px">${p.tags.map(t => `<span class="tag-pill">${esc(t.name)}</span>`).join("")}</div>` : "";
     const galleryHtml = p.gallery.length ? `
       <h2 class="section-title">Galereya</h2>
-      <div class="portfolio-grid">${p.gallery.map(g => `<div class="portfolio-thumb"><img src="${g.image}" alt=""></div>`).join("")}</div>` : "";
+      <div class="portfolio-gallery-grid">${p.gallery.map(g => `<div class="portfolio-thumb"><img src="${g.image}" alt=""></div>`).join("")}</div>` : "";
     const linksHtml = `
       <div style="margin-top:26px; display:flex; gap:14px;">
         ${p.project_url ? `<a class="btn-send" href="${esc(p.project_url)}" target="_blank">Live ko'rish</a>` : ""}
