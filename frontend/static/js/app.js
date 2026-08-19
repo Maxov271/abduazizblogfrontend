@@ -13,6 +13,42 @@ function nl2br(str) {
   return esc(str).replace(/\n/g, "<br>");
 }
 
+/* ---------------- Sichqoncha ortidan yuruvchi kichik shakl ----------------
+   Faqat haqiqiy sichqonchali qurilmalarda ishlaydi; sensorli ekranlarda
+   umuman ishga tushmaydi. Kirsagan (lerp) harakat bilan sekinlik bilan
+   kursor ortidan yuradi. */
+(function initCursorFollower() {
+  if (!window.matchMedia || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const dot = document.createElement("div");
+  dot.className = "cursor-follower";
+  document.body.appendChild(dot);
+
+  let mouseX = 0, mouseY = 0, curX = 0, curY = 0, started = false;
+
+  window.addEventListener("mousemove", (ev) => {
+    mouseX = ev.clientX;
+    mouseY = ev.clientY;
+    if (!started) {
+      curX = mouseX; curY = mouseY; started = true;
+      dot.classList.add("is-active");
+    }
+  });
+  window.addEventListener("mousedown", () => dot.classList.add("is-pressed"));
+  window.addEventListener("mouseup", () => dot.classList.remove("is-pressed"));
+  document.addEventListener("mouseleave", () => dot.classList.remove("is-active"));
+  document.addEventListener("mouseenter", () => { if (started) dot.classList.add("is-active"); });
+
+  function tick() {
+    curX += (mouseX - curX) * 0.14;
+    curY += (mouseY - curY) * 0.14;
+    dot.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
 /* ---------------- Sidebar ---------------- */
 async function renderSidebar() {
   try {

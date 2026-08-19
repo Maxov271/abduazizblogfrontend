@@ -11,7 +11,8 @@
   --radius-sm: 12px;
   --shadow-soft: 0 20px 60px -20px rgba(24, 39, 92, 0.25);
   --shadow-card: 0 10px 30px -14px rgba(24, 39, 92, 0.18);
-  --ease: cubic-bezier(.22, .8, .28, 1);
+  /* Yengil "spring" — hover/chegaralar/soyalar uchun bitta silliq overshoot beradi */
+  --ease: cubic-bezier(.34, 1.56, .64, 1);
 }
 
 * { box-sizing: border-box; }
@@ -43,22 +44,33 @@ a { transition: color .2s var(--ease), background-color .2s var(--ease); }
 
 ::selection { background: var(--accent); color: #fff; }
 
-/* ---------- Entrance animations ---------- */
+/* ---------- Entrance animations ----------
+   Elastic/overshoot: sekin boshlanadi, tezlashadi, maqsaddan sal oshib ketadi,
+   so'ng 2-3 marta kichrayib boruvchi tebranish bilan aniq joyiga o'tiradi. */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  0%   { opacity: 0; transform: translateY(26px) scale(.96); }
+  50%  { opacity: 1; transform: translateY(-6px) scale(1.012); }
+  68%  { transform: translateY(3px) scale(.996); }
+  84%  { transform: translateY(-1.4px) scale(1.002); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 @keyframes growX {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
+  0%   { transform: scaleX(0); }
+  55%  { transform: scaleX(1.08); }
+  75%  { transform: scaleX(.97); }
+  90%  { transform: scaleX(1.015); }
+  100% { transform: scaleX(1); }
 }
 @keyframes popIn {
-  from { opacity: 0; transform: scale(.9); }
-  to   { opacity: 1; transform: scale(1); }
+  0%   { opacity: 0; transform: scale(.85); }
+  55%  { opacity: 1; transform: scale(1.05); }
+  75%  { transform: scale(.98); }
+  90%  { transform: scale(1.012); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -256,6 +268,12 @@ body.has-bg-image {
   animation: fadeInUp .5s var(--ease) both;
 }
 .card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px -16px rgba(24, 39, 92, 0.28); }
+/* Ekran o'lchami o'zgarganda kartalar joyi silliq animatsiya bilan almashinadi
+   (qo'llab-quvvatlaydigan brauzerlarda grid ustunlari/oraliqlari tween qilinadi). */
+.card-grid-2, .inside-grid, .portfolio-grid, .portfolio-gallery-grid, .thread-grid {
+  transition: grid-template-columns .5s var(--ease), gap .4s var(--ease);
+}
+
 .card-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; }
 .card-grid-2 .card { display: flex; gap: 16px; align-items: flex-start; }
 .card-icon { color: var(--accent); flex-shrink: 0; margin-top: 2px; transition: transform .3s var(--ease); }
@@ -538,3 +556,27 @@ img, video { max-width: 100%; height: auto; }
 .skeleton { background: linear-gradient(90deg,#eef1f8 25%,#f6f8fc 37%,#eef1f8 63%); background-size: 400% 100%; animation: sk 1.4s ease infinite; border-radius: 10px; }
 @keyframes sk { 0% {background-position:100% 50%;} 100% {background-position:0 50%;} }
 .field-error { color: #b3261e; font-size: 13px; margin-top: 4px; }
+
+/* ---------- Sichqoncha ortidan yuruvchi kichik shakl ---------- */
+.cursor-follower {
+  position: fixed;
+  top: 0; left: 0;
+  width: 26px; height: 26px;
+  margin-left: -13px; margin-top: -13px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(130, 166, 255, .95), rgba(47, 107, 255, .55) 62%, rgba(47, 107, 255, 0) 76%);
+  box-shadow: 0 0 16px 3px rgba(47, 107, 255, .3);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity .4s var(--ease), scale .2s var(--ease);
+}
+.cursor-follower.is-active { opacity: 1; }
+.cursor-follower.is-pressed { scale: .68; }
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-follower { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cursor-follower { display: none; }
+}
