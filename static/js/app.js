@@ -73,24 +73,63 @@ function nl2br(str) {
   requestAnimationFrame(tick);
 })();
 
-/* ---------------- Responsiv qayta joylashuv animatsiyasi ----------------
+/* ---------------- Responsiv qayta joylashuv animatsiyasi (FLIP) ----------------
    Sidebar kontent panel yonidan uning ustiga o'tganda (980px chegarasi)
-   layout birdaniga "sakramasin" uchun — chegaradan o'tilganda elastik
-   fadeInUp animatsiyasini qayta ishga tushiramiz. */
-function replayEntranceAnimation(el) {
-  if (!el) return;
-  el.style.animation = "none";
-  void el.offsetWidth;
-  el.style.animation = "";
-}
-
-(function initResponsiveReflowAnimation() {
+   birdaniga "sakramasin", balki eski joyidan yangi joyiga siljib
+   ko'chsin — u yerdan g'oyib bo'lib bu yerda paydo bo'lmasin. Buning
+   uchun FLIP texnikasi ishlatiladi: chegaradan o'tishdan oldingi holat
+   (First) va o'tgandan keyingi holat (Last) orasidagi farq (Invert)
+   transform sifatida darhol qo'llanadi, so'ng elastik ravishda 0'ga
+   qaytariladi (Play) — natijada element haqiqatan ham joyidan siljib
+   ko'chganday ko'rinadi. */
+(function initSidebarReflowFlip() {
   if (!window.matchMedia) return;
-  const breakpoint = window.matchMedia("(max-width: 980px)");
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+  const TRACKED_SELECTORS = [".sidebar", ".content-panel"];
+  let lastRects = new Map();
+  let trackScheduled = false;
+
+  function trackRects() {
+    trackScheduled = false;
+    TRACKED_SELECTORS.forEach((sel) => {
+      const el = document.querySelector(sel);
+      if (el) lastRects.set(sel, el.getBoundingClientRect());
+    });
+  }
+
+  function scheduleTrack() {
+    if (trackScheduled) return;
+    trackScheduled = true;
+    requestAnimationFrame(trackRects);
+  }
+
+  window.addEventListener("resize", scheduleTrack);
+  trackRects();
+
+  function flipFromLastRect(sel) {
+    const el = document.querySelector(sel);
+    const firstRect = lastRects.get(sel);
+    if (!el || !firstRect) return;
+
+    const lastRect = el.getBoundingClientRect();
+    const dx = firstRect.left - lastRect.left;
+    const dy = firstRect.top - lastRect.top;
+    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return;
+
+    el.style.transition = "none";
+    el.style.transform = `translate(${dx}px, ${dy}px)`;
+    void el.offsetWidth;
+    requestAnimationFrame(() => {
+      el.style.transition = "transform .6s var(--ease)";
+      el.style.transform = "";
+    });
+  }
+
+  const breakpoint = window.matchMedia("(max-width: 980px)");
   function onBreakpointCross() {
-    replayEntranceAnimation(document.querySelector(".sidebar"));
-    replayEntranceAnimation(document.querySelector(".content-panel"));
+    TRACKED_SELECTORS.forEach(flipFromLastRect);
+    scheduleTrack();
   }
 
   if (breakpoint.addEventListener) breakpoint.addEventListener("change", onBreakpointCross);
