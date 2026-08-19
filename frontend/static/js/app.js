@@ -13,40 +13,88 @@ function nl2br(str) {
   return esc(str).replace(/\n/g, "<br>");
 }
 
-/* ---------------- Sichqoncha ortidan yuruvchi kichik shakl ----------------
+/* ---------------- Sichqoncha ortidan sekin yuruvchi kichkina iloncha ----------------
    Faqat haqiqiy sichqonchali qurilmalarda ishlaydi; sensorli ekranlarda
-   umuman ishga tushmaydi. Kirsagan (lerp) harakat bilan sekinlik bilan
-   kursor ortidan yuradi. */
-(function initCursorFollower() {
+   umuman ishga tushmaydi. Bosh qism sichqonchani sekinlik bilan (past lerp
+   koeffitsienti) ta'qib qiladi, har bir tana bo'g'ini esa oldingisini
+   kuzatib, to'lqinsimon iloncha harakatini hosil qiladi. */
+(function initCursorSnake() {
   if (!window.matchMedia || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const dot = document.createElement("div");
-  dot.className = "cursor-follower";
-  document.body.appendChild(dot);
+  const SIZES = [22, 18, 15, 12, 10, 8, 6];
+  const HEAD_LERP = 0.055;
+  const BODY_LERP = 0.32;
 
-  let mouseX = 0, mouseY = 0, curX = 0, curY = 0, started = false;
+  const wrap = document.createElement("div");
+  wrap.className = "cursor-snake";
+
+  const segments = SIZES.map((size, i) => {
+    const el = document.createElement("div");
+    el.className = "segment" + (i === 0 ? " is-head" : "");
+    el.style.width = `${size}px`;
+    el.style.height = `${size}px`;
+    el.style.marginLeft = `${-size / 2}px`;
+    el.style.marginTop = `${-size / 2}px`;
+    el.style.zIndex = String(SIZES.length - i);
+    if (i === 0) {
+      el.innerHTML = '<span class="eye left"></span><span class="eye right"></span>';
+    }
+    wrap.appendChild(el);
+    return { el, x: 0, y: 0 };
+  });
+  document.body.appendChild(wrap);
+
+  let mouseX = 0, mouseY = 0, started = false;
 
   window.addEventListener("mousemove", (ev) => {
     mouseX = ev.clientX;
     mouseY = ev.clientY;
     if (!started) {
-      curX = mouseX; curY = mouseY; started = true;
-      dot.classList.add("is-active");
+      segments.forEach((seg) => { seg.x = mouseX; seg.y = mouseY; });
+      started = true;
+      wrap.classList.add("is-active");
     }
   });
-  window.addEventListener("mousedown", () => dot.classList.add("is-pressed"));
-  window.addEventListener("mouseup", () => dot.classList.remove("is-pressed"));
-  document.addEventListener("mouseleave", () => dot.classList.remove("is-active"));
-  document.addEventListener("mouseenter", () => { if (started) dot.classList.add("is-active"); });
+  document.addEventListener("mouseleave", () => wrap.classList.remove("is-active"));
+  document.addEventListener("mouseenter", () => { if (started) wrap.classList.add("is-active"); });
 
   function tick() {
-    curX += (mouseX - curX) * 0.14;
-    curY += (mouseY - curY) * 0.14;
-    dot.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
+    segments.forEach((seg, i) => {
+      const targetX = i === 0 ? mouseX : segments[i - 1].x;
+      const targetY = i === 0 ? mouseY : segments[i - 1].y;
+      const lerp = i === 0 ? HEAD_LERP : BODY_LERP;
+      seg.x += (targetX - seg.x) * lerp;
+      seg.y += (targetY - seg.y) * lerp;
+      seg.el.style.transform = `translate3d(${seg.x}px, ${seg.y}px, 0)`;
+    });
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
+})();
+
+/* ---------------- Responsiv qayta joylashuv animatsiyasi ----------------
+   Sidebar kontent panel yonidan uning ustiga o'tganda (980px chegarasi)
+   layout birdaniga "sakramasin" uchun — chegaradan o'tilganda elastik
+   fadeInUp animatsiyasini qayta ishga tushiramiz. */
+function replayEntranceAnimation(el) {
+  if (!el) return;
+  el.style.animation = "none";
+  void el.offsetWidth;
+  el.style.animation = "";
+}
+
+(function initResponsiveReflowAnimation() {
+  if (!window.matchMedia) return;
+  const breakpoint = window.matchMedia("(max-width: 980px)");
+
+  function onBreakpointCross() {
+    replayEntranceAnimation(document.querySelector(".sidebar"));
+    replayEntranceAnimation(document.querySelector(".content-panel"));
+  }
+
+  if (breakpoint.addEventListener) breakpoint.addEventListener("change", onBreakpointCross);
+  else if (breakpoint.addListener) breakpoint.addListener(onBreakpointCross);
 })();
 
 /* ---------------- Sidebar ---------------- */
