@@ -1,7 +1,7 @@
 /* Barcha backend (Django REST API) bilan aloqa shu faylda.
    API bir xil domenda ishlaydi deb hisoblanadi ("/api"). Agar frontend
    boshqa domenda joylashtirilsa, quyidagi API_BASE'ni to'liq manzilga
-   o'zgartiring, masalan: "https://api.umarovgroup.uz.uz/api" */
+   o'zgartiring, masalan: "https://api.hanzodev.uz/api" */
 const API_BASE = "https://devopsurol.alwaysdata.net/api";
 
 async function apiGet(path) {
@@ -42,4 +42,9 @@ const Api = {
   threadComments: (slug) => apiGet(`/thread/${encodeURIComponent(slug)}/comments/`),
   postComment: (slug, data) => apiPost(`/thread/${encodeURIComponent(slug)}/comments/create/`, data),
   sendContact: (data) => apiPost("/contact/", data),
+  team: () => apiGet("/team/"),
+  studentCategories: () => apiGet("/student-categories/"),
+  studentList: (category) => apiGet(`/students/${category && category !== "all" ? `?category=${encodeURIComponent(category)}` : ""}`),
+  siteStats: () => apiGet("/stats/"),
+  trackVisit: () => apiPost("/stats/track-visit/", {}),
 };
