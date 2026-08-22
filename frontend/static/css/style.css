@@ -207,6 +207,7 @@ body.has-bg-image {
 /* ---------- Content panel ---------- */
 .content-panel {
   flex: 1;
+  min-width: 0;
   background: var(--card-bg);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
@@ -268,10 +269,26 @@ body.has-bg-image {
   animation: fadeInUp .5s var(--ease) both;
 }
 .card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px -16px rgba(24, 39, 92, 0.28); }
+
+/* ---------- Universal 3D tilt + cursor-glow (barcha kartalar/rasmlar) ----------
+   Sichqoncha karta ustida qaysi burchakka yaqinlashsa, karta o'sha tomonga
+   ko'tarilganday moyillanadi; sichqoncha ortidan yumshoq nur (glow) yuradi.
+   Faqat aniq sichqonchali qurilmalarda ishga tushadi (JS orqali boshqariladi). */
+.tilt-card { position: relative; transform-style: preserve-3d; transition: transform .15s ease-out, box-shadow .3s var(--ease); }
+.tilt-card::after {
+  content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+  border-radius: inherit; opacity: 0; mix-blend-mode: overlay;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.6), transparent 55%);
+  transition: opacity .25s var(--ease);
+}
+.tilt-card:hover::after { opacity: 1; }
+@media (hover: none), (pointer: coarse) {
+  .tilt-card::after { display: none; }
+}
 /* Ekran o'lchami o'zgarganda kartalar joyi silliq animatsiya bilan almashinadi
    (qo'llab-quvvatlaydigan brauzerlarda grid ustunlari/oraliqlari tween qilinadi). */
 .card-grid-2, .inside-grid, .portfolio-grid, .portfolio-gallery-grid, .thread-grid,
-.team-grid, .students-grid {
+.students-grid {
   transition: grid-template-columns .5s var(--ease), gap .4s var(--ease);
 }
 
@@ -400,37 +417,64 @@ body.has-bg-image {
 .thread-stat { color: var(--text-muted); }
 
 /* ---------- Team (Mening Jamoam) ---------- */
-.team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+.team-carousel { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.team-track {
+  display: flex; gap: 22px; flex: 1; min-width: 0;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  padding: 6px 4px 22px; scrollbar-width: none;
+}
+.team-track::-webkit-scrollbar { display: none; }
+.team-nav {
+  flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; border: none;
+  background: #fff; box-shadow: var(--shadow-card); color: var(--text-dark);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+}
+.team-nav svg { width: 18px; height: 18px; }
+.team-nav:hover { background: var(--accent); color: #fff; transform: scale(1.08); }
+.team-dots { display: flex; justify-content: center; gap: 8px; margin-top: -8px; }
+.team-dot { width: 8px; height: 8px; padding: 0; border: none; border-radius: 50%; background: #d7deee; cursor: pointer; transition: background .2s var(--ease), transform .2s var(--ease); }
+.team-dot.active { background: var(--accent); transform: scale(1.35); }
+
 .team-card {
-  position: relative;
+  position: relative; overflow: hidden; --accent-glow: var(--accent);
+  flex: 0 0 250px; scroll-snap-align: center;
   background: #fff; border-radius: var(--radius-md); padding: 28px 24px 24px;
   box-shadow: var(--shadow-card); text-align: center;
-  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+  transform-style: preserve-3d;
+  transition: transform .15s ease-out, box-shadow .3s var(--ease);
   animation: fadeInUp .5s var(--ease) both;
 }
-.team-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px -16px rgba(24, 39, 92, 0.28); }
-.team-grid .team-card:nth-child(2) { animation-delay: .06s; }
-.team-grid .team-card:nth-child(3) { animation-delay: .12s; }
-.team-grid .team-card:nth-child(4) { animation-delay: .18s; }
+.team-card::before {
+  content: ""; position: absolute; top: -34px; left: 50%; transform: translateX(-50%);
+  width: 150px; height: 150px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  opacity: .3; filter: blur(4px); z-index: 0;
+}
+.team-card:hover { box-shadow: 0 22px 44px -16px rgba(24, 39, 92, 0.32); }
+.team-track .team-card:nth-child(2) { animation-delay: .06s; }
+.team-track .team-card:nth-child(3) { animation-delay: .12s; }
+.team-track .team-card:nth-child(4) { animation-delay: .18s; }
 .team-icon-badge {
-  position: absolute; top: 16px; left: 16px;
+  position: absolute; top: 16px; left: 16px; z-index: 1;
   width: 34px; height: 34px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   color: #fff; box-shadow: 0 4px 10px -2px rgba(0,0,0,.25);
 }
 .team-icon-badge svg { width: 18px; height: 18px; }
 .team-avatar {
+  position: relative; z-index: 1;
   width: 96px; height: 96px; margin: 0 auto 14px;
   border-radius: 50%; overflow: hidden; background: #eef1f8;
   display: flex; align-items: center; justify-content: center;
-  font-size: 40px;
+  font-size: 40px; box-shadow: 0 0 0 4px #fff, 0 6px 18px -6px rgba(24,39,92,.35);
 }
 .team-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.team-card h3 { margin: 0 0 4px; font-size: 17px; font-weight: 700; }
-.team-role { display: block; color: var(--accent); font-size: 13.5px; font-weight: 600; margin-bottom: 14px; }
+.team-card h3 { position: relative; z-index: 1; margin: 0 0 4px; font-size: 17px; font-weight: 700; }
+.team-role { position: relative; z-index: 1; display: block; color: var(--accent); font-size: 13.5px; font-weight: 600; margin-bottom: 14px; }
 .team-tags { justify-content: center; margin-bottom: 12px; }
 .team-desc { color: var(--text-muted); font-size: 13.5px; line-height: 1.6; margin: 0 0 16px; }
-.team-footer { display: flex; justify-content: center; }
+.team-footer { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; }
 .team-socials { display: flex; gap: 10px; }
 .team-socials a {
   width: 34px; height: 34px; border-radius: 50%;
@@ -440,6 +484,51 @@ body.has-bg-image {
 }
 .team-socials a:hover { background: var(--accent); color: #fff; transform: translateY(-2px); }
 .team-socials svg { width: 16px; height: 16px; }
+.team-arrow-btn {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; text-decoration: none; box-shadow: 0 8px 18px -8px rgba(0,0,0,.4);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.team-arrow-btn svg { width: 16px; height: 16px; }
+.team-arrow-btn:hover { transform: scale(1.1) translateX(2px); }
+
+/* ---------- Skills cube (About Me -> What I Do) ---------- */
+.what-i-do-layout { display: flex; align-items: center; gap: 36px; flex-wrap: wrap; }
+.what-i-do-layout .card-grid-2 { flex: 1 1 360px; min-width: 280px; margin: 0; }
+.skills-cube-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; flex: 0 0 auto; margin: 0 auto; }
+.skills-cube-scene {
+  --cube-size: 220px; width: var(--cube-size); height: var(--cube-size);
+  perspective: 1000px; touch-action: none; transition: transform .25s var(--ease);
+}
+.skills-cube-scene:hover { transform: scale(1.045); }
+.skills-cube {
+  width: 100%; height: 100%; position: relative; transform-style: preserve-3d;
+  cursor: grab; will-change: transform; user-select: none;
+}
+.skills-cube.grabbing { cursor: grabbing; }
+.cube-face {
+  position: absolute; width: var(--cube-size); height: var(--cube-size);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  border-radius: 22px; padding: 16px; text-align: center; color: #fff;
+  background: linear-gradient(150deg, rgba(47,107,255,.55), rgba(124,58,237,.55));
+  border: 1.5px solid rgba(255,255,255,.35);
+  box-shadow: 0 0 34px rgba(90,110,255,.4), inset 0 0 40px rgba(255,255,255,.1);
+  backdrop-filter: blur(4px);
+}
+.skills-cube-scene:hover .cube-face { box-shadow: 0 0 48px rgba(110,140,255,.6), inset 0 0 50px rgba(255,255,255,.16); }
+.cube-face-icon { width: 42px; height: 42px; color: #fff; filter: drop-shadow(0 2px 6px rgba(0,0,0,.3)); }
+.cube-face-icon svg { width: 100%; height: 100%; }
+.cube-face h4 { margin: 0; font-size: 15px; font-weight: 800; }
+.cube-face p { margin: 0; font-size: 10.5px; line-height: 1.5; opacity: .88; }
+.cube-face-front  { transform: translateZ(calc(var(--cube-size) / 2)); }
+.cube-face-back   { transform: rotateY(180deg) translateZ(calc(var(--cube-size) / 2)); }
+.cube-face-right  { transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2)); }
+.cube-face-left   { transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2)); }
+.cube-face-top    { transform: rotateX(90deg) translateZ(calc(var(--cube-size) / 2)); }
+.cube-face-bottom { transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2)); }
+.skills-cube-hint { font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.5; user-select: none; }
+.skills-cube-hint span { opacity: .75; }
 
 /* ---------- Students (Mening O'quvchilarim) ---------- */
 .students-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 26px; }
@@ -543,6 +632,9 @@ a:focus-visible, button:focus-visible, .form-input:focus-visible, .form-textarea
   .card-grid-2, .form-grid { grid-template-columns: 1fr; }
   .inside-grid, .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
 
+  .what-i-do-layout { flex-direction: column; }
+  .skills-cube-scene { --cube-size: 190px; }
+
   /* Kompakt mobil sarlavha: avatar + ism qatorda, kontaktlar "Show Contacts"
      bosilgandagina ochiladi. Sticky kerak emas — oddiy oqimda turadi. */
   .sidebar {
@@ -616,10 +708,15 @@ a:focus-visible, button:focus-visible, .form-input:focus-visible, .form-textarea
   .stats-bar { gap: 10px; }
   .stat-chip { padding: 7px 13px; font-size: 13px; }
 
-  .team-grid, .students-grid { gap: 14px; }
-  .team-card { padding: 24px 18px 20px; }
+  .students-grid { gap: 14px; }
+  .team-track { gap: 14px; }
+  .team-card { flex-basis: 210px; padding: 24px 18px 20px; }
+  .team-nav { width: 34px; height: 34px; }
   .students-toolbar { flex-direction: column; align-items: stretch; }
   .student-search { max-width: none; }
+
+  .skills-cube-scene { --cube-size: 150px; }
+  .cube-face p { display: none; }
 
   .contact-card { padding: 20px; }
   .contact-heading { font-size: 20px; }

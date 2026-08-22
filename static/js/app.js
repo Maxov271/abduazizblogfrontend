@@ -237,6 +237,8 @@ function cardIconSvg(key) {
     layers: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     bolt: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke-linejoin="round"/></svg>`,
     server: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><circle cx="7" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="7" cy="17" r="1" fill="currentColor" stroke="none"/></svg>`,
+    office: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9" stroke-linecap="round"/></svg>`,
+    graduation: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l10 5-10 5L2 8l10-5z" stroke-linejoin="round"/><path d="M6 10.5V16c0 1.5 2.8 3 6 3s6-1.5 6-3v-5.5" stroke-linecap="round"/></svg>`,
   };
   return icons[key] || `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>`;
 }
@@ -253,6 +255,14 @@ function socialIconSvg(platform) {
     threads: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.2 2C7 2 3.5 5.1 3.4 10.2c0 .1 0 4.6 0 4.7C3.5 19.9 7 23 12.3 23c4.2 0 7.1-1.9 7.9-5.4l-2.4-.5c-.6 2.1-2.3 3.4-5.4 3.4-3.4 0-5.4-1.7-5.6-4.7 4.6.1 9.3-.1 9.9-3.6.4-2.3-1.1-4.6-4.7-4.9-2.6-.2-4.5.8-5.4 2.6l2.2 1c.5-1 1.5-1.5 3-1.4 1.7.1 2.4 1 2.3 1.9-.2 1.2-2.3 1.4-6.6 1.3.3-3 2.1-4.4 4.7-4.4 2.9 0 4.6 1.4 5.1 3.7l2.3-.6C19.7 4.3 16.7 2 12.2 2z"/></svg>`,
   };
   return icons[platform] || `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>`;
+}
+
+function arrowIconSvg() {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+function chevronIconSvg(dir) {
+  const d = dir === "left" ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6";
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="${d}" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 
 /* ---------------- Site settings (favicon/title/accent) ---------------- */
@@ -283,6 +293,205 @@ function setActiveTab(tab) {
   navTabsEl.querySelectorAll("a").forEach(a => a.classList.toggle("active", a.dataset.tab === tab));
 }
 
+/* ---------------- Skills cube (About Me -> What I Do) ---------------- */
+const CUBE_FACES = [
+  { title: "Web Development", icon: "laptop-code", tech: "HTML, CSS, JavaScript, React, Vue, Next.js" },
+  { title: "Python & Django", icon: "code", tech: "Python, Django, REST API, ORM, Backend" },
+  { title: "Microsoft Office", icon: "office", tech: "Excel, Word, PowerPoint, Advanced Excel, Automation" },
+  { title: "Telegram Bot", icon: "telegram", tech: "TeleBot, Telegram API, Automation, Payment systems" },
+  { title: "IT Training", icon: "graduation", tech: "Computer Literacy, Microsoft Office, Programming, Education" },
+  { title: "Hosting & DevOps", icon: "server", tech: "Linux, Docker, Nginx, VPS, CI/CD, Deployment" },
+];
+const CUBE_FACE_CLASSES = ["cube-face-front", "cube-face-back", "cube-face-right", "cube-face-left", "cube-face-top", "cube-face-bottom"];
+
+function renderSkillsCube() {
+  const facesHtml = CUBE_FACES.map((f, i) => `
+    <div class="cube-face ${CUBE_FACE_CLASSES[i]}">
+      <span class="cube-face-icon">${f.icon === "telegram" ? socialIconSvg("telegram") : cardIconSvg(f.icon)}</span>
+      <h4>${esc(f.title)}</h4>
+      <p>${esc(f.tech)}</p>
+    </div>`).join("");
+  return `
+    <div class="skills-cube-wrap">
+      <div class="skills-cube-scene">
+        <div class="skills-cube" id="skills-cube">${facesHtml}</div>
+      </div>
+      <div class="skills-cube-hint">Kubni sichqoncha bilan aylantiring<br><span>(bosib ushlab turing va suring)</span></div>
+    </div>`;
+}
+
+/* Haqiqiy fizika: drag paytida burchak sichqoncha harakatiga mos, qo'yib
+   yuborilganda inertiya bilan davom etadi, friction bilan sekinlashadi,
+   so'ng eng yaqin yuzaga yumshoq snap qiladi va nihoyat sekin auto-rotate
+   rejimiga qaytadi. Barchasi requestAnimationFrame bitta silliq davrida. */
+function initSkillsCube(cube) {
+  if (!cube || cube.dataset.inited) return;
+  cube.dataset.inited = "1";
+
+  let rotX = -14, rotY = 26;
+  let velX = 0, velY = 0;
+  let dragging = false;
+  let snapping = false;
+  let lastX = 0, lastY = 0, lastT = 0;
+  let lastInteraction = performance.now();
+
+  const FRICTION = 0.945;
+  const VEL_STOP = 0.02;
+  const SNAP_DELAY = 240;
+  const SNAP_EASE = 0.12;
+  const IDLE_DELAY = 1500;
+  const IDLE_SPEED = 0.05;
+
+  function apply() {
+    cube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  }
+  apply();
+
+  function onDown(e) {
+    dragging = true;
+    snapping = false;
+    velX = 0; velY = 0;
+    cube.classList.add("grabbing");
+    lastX = e.clientX; lastY = e.clientY; lastT = performance.now();
+    lastInteraction = lastT;
+    try { cube.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+    e.preventDefault();
+  }
+  function onMove(e) {
+    if (!dragging) return;
+    const now = performance.now();
+    const dt = Math.max(now - lastT, 1);
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    rotY += dx * 0.4;
+    rotX = Math.max(-85, Math.min(85, rotX - dy * 0.4));
+    velY = (dx * 0.4) / (dt / 16.7);
+    velX = (-dy * 0.4) / (dt / 16.7);
+    lastX = e.clientX; lastY = e.clientY; lastT = now;
+    lastInteraction = now;
+    apply();
+    e.preventDefault();
+  }
+  function onUp() {
+    if (!dragging) return;
+    dragging = false;
+    cube.classList.remove("grabbing");
+    lastInteraction = performance.now();
+  }
+
+  cube.addEventListener("pointerdown", onDown);
+  cube.addEventListener("pointermove", onMove);
+  cube.addEventListener("pointerup", onUp);
+  cube.addEventListener("pointercancel", onUp);
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  function tick() {
+    if (!document.body.contains(cube)) return; // sahifadan chiqilgan — davrni to'xtatamiz
+    const now = performance.now();
+    if (!dragging) {
+      if (Math.abs(velX) > VEL_STOP || Math.abs(velY) > VEL_STOP) {
+        rotX = Math.max(-85, Math.min(85, rotX + velX));
+        rotY += velY;
+        velX *= FRICTION;
+        velY *= FRICTION;
+        snapping = false;
+      } else if (!snapping && now - lastInteraction > SNAP_DELAY) {
+        snapping = true;
+      }
+      if (snapping) {
+        const targetX = Math.max(-85, Math.min(85, Math.round(rotX / 90) * 90));
+        const targetY = Math.round(rotY / 90) * 90;
+        rotX += (targetX - rotX) * SNAP_EASE;
+        rotY += (targetY - rotY) * SNAP_EASE;
+        if (Math.abs(targetX - rotX) < 0.25 && Math.abs(targetY - rotY) < 0.25) {
+          rotX = targetX; rotY = targetY;
+          snapping = false;
+          lastInteraction = now;
+        }
+      } else if (now - lastInteraction > IDLE_DELAY) {
+        rotY += IDLE_SPEED;
+      }
+      apply();
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ---------------- Universal tilt + cursor-glow effect (barcha kartalar) ----------------
+   Sichqoncha karta ustida qaysi burchakka yaqinlashsa, karta o'sha burchagi
+   ko'tarilganday moyillashadi (3D tilt), shu bilan birga sichqoncha ortidan
+   yumshoq glow effekti yuradi. Faqat aniq sichqonchali qurilmalarda ishlaydi. */
+function initTiltCards(root) {
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const cards = (root || document).querySelectorAll(".tilt-card");
+  cards.forEach(card => {
+    if (card.dataset.tiltInited) return;
+    card.dataset.tiltInited = "1";
+    function onMove(e) {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      const rx = (0.5 - py) * 12;
+      const ry = (px - 0.5) * 12;
+      card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`;
+      card.style.setProperty("--mx", `${px * 100}%`);
+      card.style.setProperty("--my", `${py * 100}%`);
+    }
+    function onLeave() {
+      card.style.transform = "";
+      card.style.removeProperty("--mx");
+      card.style.removeProperty("--my");
+    }
+    card.addEventListener("mousemove", onMove);
+    card.addEventListener("mouseleave", onLeave);
+  });
+}
+
+/* ---------------- Team carousel ---------------- */
+function initTeamCarousel() {
+  const track = document.getElementById("team-track");
+  if (!track) return;
+  const cards = Array.from(track.children);
+  const dotsWrap = document.getElementById("team-dots");
+  if (dotsWrap) {
+    dotsWrap.innerHTML = cards.map((_, i) => `<button type="button" class="team-dot" data-i="${i}" aria-label="Slayd ${i + 1}"></button>`).join("");
+  }
+  const dots = dotsWrap ? Array.from(dotsWrap.children) : [];
+
+  function updateActive() {
+    const trackRect = track.getBoundingClientRect();
+    const center = trackRect.left + trackRect.width / 2;
+    let closest = 0, closestDist = Infinity;
+    cards.forEach((c, i) => {
+      const r = c.getBoundingClientRect();
+      const dist = Math.abs(r.left + r.width / 2 - center);
+      if (dist < closestDist) { closestDist = dist; closest = i; }
+    });
+    dots.forEach((d, i) => d.classList.toggle("active", i === closest));
+  }
+
+  let scrollTimer = null;
+  track.addEventListener("scroll", () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(updateActive, 90);
+  }, { passive: true });
+
+  dots.forEach(d => d.addEventListener("click", () => {
+    const i = Number(d.dataset.i);
+    cards[i].scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }));
+
+  const prev = document.querySelector(".team-prev");
+  const next = document.querySelector(".team-next");
+  const step = () => (cards[0] ? cards[0].getBoundingClientRect().width + 22 : 260);
+  if (prev) prev.addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
+  if (next) next.addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
+
+  updateActive();
+}
+
 /* ---------------- Route: About ---------------- */
 async function routeAbout() {
   setActiveTab("about");
@@ -301,19 +510,22 @@ async function routeAbout() {
 
     const servicesHtml = services.length ? `
       <h2 class="section-title">What I Do</h2>
-      <div class="card-grid-2">
-        ${services.map(s => `
-          <div class="card">
-            <span class="card-icon">${cardIconSvg(s.icon)}</span>
-            <div><h3>${esc(s.title)}</h3><p>${esc(s.description)}</p></div>
-          </div>`).join("")}
+      <div class="what-i-do-layout">
+        ${renderSkillsCube()}
+        <div class="card-grid-2">
+          ${services.map(s => `
+            <div class="card tilt-card">
+              <span class="card-icon">${cardIconSvg(s.icon)}</span>
+              <div><h3>${esc(s.title)}</h3><p>${esc(s.description)}</p></div>
+            </div>`).join("")}
+        </div>
       </div>` : "";
 
     const insideHtml = insideWorld.length ? `
       <h2 class="section-title">Inside ${esc(profile.display_name)}'s World</h2>
       <div class="inside-grid">
         ${insideWorld.map(card => `
-          <div class="card">
+          <div class="card tilt-card">
             <div class="card-head">
               <span class="card-icon">${cardIconSvg(card.icon)}</span>
               <h3>${esc(card.title)}</h3>
@@ -346,6 +558,9 @@ async function routeAbout() {
         </form>
       </div>
     `;
+
+    const skillsCubeEl = document.getElementById("skills-cube");
+    if (skillsCubeEl) initSkillsCube(skillsCubeEl);
 
     document.getElementById("contact-form").addEventListener("submit", async (ev) => {
       ev.preventDefault();
@@ -431,7 +646,7 @@ async function routePortfolio(activeCategory = "all") {
     `;
 
     const gridHtml = projects.length ? projects.map(p => `
-      <a class="portfolio-card" href="#/portfolio/${encodeURIComponent(p.slug)}">
+      <a class="portfolio-card tilt-card" href="#/portfolio/${encodeURIComponent(p.slug)}">
         <div class="portfolio-thumb">${p.cover_image ? `<img src="${p.cover_image}" alt="${esc(p.title)}">` : ""}</div>
         <h3>${esc(p.title)}</h3>
         <span>${esc(p.category ? p.category.name : "")}</span>
@@ -487,7 +702,7 @@ async function routeThread() {
   try {
     const posts = await Api.threadList();
     const grid = posts.length ? posts.map(post => `
-      <a class="thread-card" href="#/thread/${encodeURIComponent(post.slug)}">
+      <a class="thread-card tilt-card" href="#/thread/${encodeURIComponent(post.slug)}">
         <div class="thread-meta">${formatDate(post.published_at)} &nbsp; <span class="read-time">${post.read_minutes} min read</span> &nbsp; <span class="thread-stat">👁️ ${post.views}</span> &nbsp; <span class="thread-stat">💬 ${post.comment_count}</span></div>
         <h3>${esc(post.title)}</h3>
         <p>${esc(post.excerpt)}</p>
@@ -566,8 +781,10 @@ async function routeTeam() {
   contentEl.innerHTML = `<p class="loading-text">Yuklanmoqda...</p>`;
   try {
     const members = await Api.team();
-    const grid = members.length ? members.map(m => `
-      <div class="team-card">
+    const cards = members.map(m => {
+      const primaryLink = m.github_url || m.linkedin_url || m.telegram_url || "";
+      return `
+      <div class="team-card tilt-card" style="--accent-glow:${esc(m.accent_color)}">
         <span class="team-icon-badge" style="background:${esc(m.accent_color)}">${cardIconSvg(m.icon)}</span>
         <div class="team-avatar">${m.avatar ? `<img src="${m.avatar}" alt="${esc(m.name)}">` : `<span class="avatar-placeholder">🙂</span>`}</div>
         <h3>${esc(m.name)}</h3>
@@ -580,15 +797,28 @@ async function routeTeam() {
             ${m.linkedin_url ? `<a href="${esc(m.linkedin_url)}" target="_blank" rel="noopener" title="LinkedIn">${socialIconSvg("linkedin")}</a>` : ""}
             ${m.telegram_url ? `<a href="${esc(m.telegram_url)}" target="_blank" rel="noopener" title="Telegram">${socialIconSvg("telegram")}</a>` : ""}
           </div>
+          ${primaryLink ? `<a class="team-arrow-btn" style="background:${esc(m.accent_color)}" href="${esc(primaryLink)}" target="_blank" rel="noopener" aria-label="Ko'proq bilish">${arrowIconSvg()}</a>` : ""}
         </div>
-      </div>`).join("") : `<p class="lead-text">Hozircha jamoa a'zolari qo'shilmagan.</p>`;
+      </div>`;
+    });
+
+    const bodyHtml = members.length ? `
+      <div class="team-carousel">
+        <button type="button" class="team-nav team-prev" aria-label="Oldingi">${chevronIconSvg("left")}</button>
+        <div class="team-track" id="team-track">${cards.join("")}</div>
+        <button type="button" class="team-nav team-next" aria-label="Keyingi">${chevronIconSvg("right")}</button>
+      </div>
+      <div class="team-dots" id="team-dots"></div>
+    ` : `<p class="lead-text">Hozircha jamoa a'zolari qo'shilmagan.</p>`;
 
     contentEl.innerHTML = `
       <h1 class="page-title">Mening Jamoam 🚀</h1>
       <div class="title-underline"></div>
       <p class="lead-text" style="margin-top:-14px">Har bir loyiha ortida zo'r jamoa bor.</p>
-      <div class="team-grid">${grid}</div>
+      ${bodyHtml}
     `;
+
+    if (members.length) initTeamCarousel();
   } catch (e) {
     contentEl.innerHTML = `<p class="loading-text">Ma'lumot yuklanmadi.</p>`;
   }
@@ -614,7 +844,7 @@ async function routeStudents(activeCategory = "all") {
         ? `${s.start_date ? formatMonthYear(s.start_date) : ""} – ${s.end_date ? formatMonthYear(s.end_date) : "hozir"}`
         : "";
       return `
-      <div class="student-card" data-name="${esc(s.name.toLowerCase())}" style="--cat-color:${catColor}">
+      <div class="student-card tilt-card" data-name="${esc(s.name.toLowerCase())}" style="--cat-color:${catColor}">
         <div class="student-photo-ring">
           <div class="student-photo">${s.photo ? `<img src="${s.photo}" alt="${esc(s.name)}">` : `<span class="avatar-placeholder">🙂</span>`}</div>
         </div>
@@ -663,17 +893,19 @@ function parseHash() {
   return { segments, query };
 }
 
-function router() {
+async function router() {
   const { segments, query } = parseHash();
   const [section, param] = segments;
 
-  if (!section || section === "about") return routeAbout();
-  if (section === "resume") return routeResume();
-  if (section === "portfolio") return param ? routePortfolioDetail(param) : routePortfolio(query.get("category") || "all");
-  if (section === "team") return routeTeam();
-  if (section === "students") return routeStudents(query.get("category") || "all");
-  if (section === "thread") return param ? routeThreadDetail(param) : routeThread();
-  return routeAbout();
+  if (!section || section === "about") await routeAbout();
+  else if (section === "resume") await routeResume();
+  else if (section === "portfolio") await (param ? routePortfolioDetail(param) : routePortfolio(query.get("category") || "all"));
+  else if (section === "team") await routeTeam();
+  else if (section === "students") await routeStudents(query.get("category") || "all");
+  else if (section === "thread") await (param ? routeThreadDetail(param) : routeThread());
+  else await routeAbout();
+
+  initTiltCards(contentEl);
 }
 
 let publicHashListenerAttached = false;
