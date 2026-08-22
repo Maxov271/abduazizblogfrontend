@@ -285,6 +285,7 @@ async function applySiteSettings() {
       document.body.classList.add("has-bg-image");
       document.body.style.setProperty("--bg-image-url", `url('${s.background_image}')`);
     }
+    if (s.cube_rotation_seconds) window.__cubeRotationSeconds = Number(s.cube_rotation_seconds);
   } catch (e) { /* sokin xato — default stil ishlatiladi */ }
 }
 
@@ -293,30 +294,50 @@ function setActiveTab(tab) {
   navTabsEl.querySelectorAll("a").forEach(a => a.classList.toggle("active", a.dataset.tab === tab));
 }
 
-/* ---------------- Skills cube (About Me -> What I Do) ---------------- */
+/* ---------------- Skills cube (About Me hero) ---------------- */
+/* Tartib "top, left, right, front, back, bottom" ga mos keladi — shunda
+   dastlabki (vitrina) burchakda aynan Web Development tepada, Python & Django
+   chapda, Microsoft Office o'ngda ko'rinadi (mos rasm bo'yicha). */
 const CUBE_FACES = [
   { title: "Web Development", icon: "laptop-code", tech: "HTML, CSS, JavaScript, React, Vue, Next.js" },
-  { title: "Python & Django", icon: "code", tech: "Python, Django, REST API, ORM, Backend" },
-  { title: "Microsoft Office", icon: "office", tech: "Excel, Word, PowerPoint, Advanced Excel, Automation" },
+  { title: "Python & Django", icon: "python", tech: "Backend development\nREST API, ORM, Admin" },
+  { title: "Microsoft Office", icon: "msoffice", tech: "Excel, Word, PowerPoint\nAdvanced automation" },
   { title: "Telegram Bot", icon: "telegram", tech: "TeleBot, Telegram API, Automation, Payment systems" },
   { title: "IT Training", icon: "graduation", tech: "Computer Literacy, Microsoft Office, Programming, Education" },
   { title: "Hosting & DevOps", icon: "server", tech: "Linux, Docker, Nginx, VPS, CI/CD, Deployment" },
 ];
-const CUBE_FACE_CLASSES = ["cube-face-front", "cube-face-back", "cube-face-right", "cube-face-left", "cube-face-top", "cube-face-bottom"];
+const CUBE_FACE_CLASSES = ["cube-face-top", "cube-face-left", "cube-face-front", "cube-face-right", "cube-face-back", "cube-face-bottom"];
+
+function cubeFaceIconSvg(key) {
+  if (key === "python") return `<svg viewBox="0 0 32 32" fill="none"><path d="M15.9 2c-1.4 0-2.7.1-3.8.3-3.4.6-4 1.9-4 4.2v3.1h8v1H8.4C6 10.6 3.9 12 3.9 15.7c0 3.7 1.8 5.7 4.5 5.7h1.8v-2.4c0-2.8 2.4-5.3 5.3-5.3h6.4c2.5 0 4.5-2 4.5-4.5V6.5c0-2.4-2-4.2-4.5-4.6C20.1 2.1 17.9 2 15.9 2z" fill="#3776AB"/><path d="M16.1 30c1.4 0 2.7-.1 3.8-.3 3.4-.6 4-1.9 4-4.2v-3.1h-8v-1h11.7c2.4 0 4.5-1.4 4.5-5.1 0-3.7-1.8-5.7-4.5-5.7h-1.8v2.4c0 2.8-2.4 5.3-5.3 5.3H14c-2.5 0-4.5 2-4.5 4.5v4.2c0 2.4 2 4.2 4.5 4.6.9.1 3.1.4 2.1.4z" fill="#FFD43B"/><circle cx="12.5" cy="6" r="1.2" fill="#fff"/><circle cx="19.5" cy="26" r="1.2" fill="#fff"/></svg>`;
+  if (key === "msoffice") return `<svg viewBox="0 0 32 32" fill="none"><path d="M18 2l11 4v20l-11 4V2z" fill="#ED6C47"/><path d="M18 2L3 6v20l15 4V2z" fill="#FF8F6B"/><path d="M3 6l15-4v28L3 26V6z" fill="#F9A583" opacity=".25"/><rect x="7" y="10" width="7" height="12" rx="1" fill="#fff" opacity=".92"/><path d="M8.5 12l4 8M12.5 12l-4 8" stroke="#D24726" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+  return null;
+}
 
 function renderSkillsCube() {
-  const facesHtml = CUBE_FACES.map((f, i) => `
+  const facesHtml = CUBE_FACES.map((f, i) => {
+    const brandIcon = cubeFaceIconSvg(f.icon);
+    const iconHtml = brandIcon || (f.icon === "telegram" ? socialIconSvg("telegram") : cardIconSvg(f.icon));
+    return `
     <div class="cube-face ${CUBE_FACE_CLASSES[i]}">
-      <span class="cube-face-icon">${f.icon === "telegram" ? socialIconSvg("telegram") : cardIconSvg(f.icon)}</span>
-      <h4>${esc(f.title)}</h4>
-      <p>${esc(f.tech)}</p>
-    </div>`).join("");
+      <div class="cube-face-inner">
+        <span class="cube-face-icon${brandIcon ? " cube-face-icon-brand" : ""}">${iconHtml}</span>
+        <h4>${esc(f.title)}</h4>
+        <p>${esc(f.tech).replace(/\n/g, "<br>")}</p>
+      </div>
+    </div>`;
+  }).join("");
   return `
     <div class="skills-cube-wrap">
       <div class="skills-cube-scene">
         <div class="skills-cube" id="skills-cube">${facesHtml}</div>
       </div>
-      <div class="skills-cube-hint">Kubni sichqoncha bilan aylantiring<br><span>(bosib ushlab turing va suring)</span></div>
+      <svg class="cube-rotate-hint-svg" viewBox="0 0 120 34" width="120" height="34" aria-hidden="true">
+        <path d="M12 17 A46 46 0 0 0 52 32" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 6"/>
+        <path d="M108 17 A46 46 0 0 1 68 32" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 6"/>
+        <path d="M12 17l6.5-3.5M12 17l1.5 7" stroke="rgba(255,255,255,.75)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M108 17l-6.5-3.5M108 17l-1.5 7" stroke="rgba(255,255,255,.75)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
     </div>`;
 }
 
@@ -331,8 +352,8 @@ function initSkillsCube(cube) {
   // Doimiy "vitrina" og'ishi: kub qo'yib yuborilgandan keyin har doim shu
   // burchakka qaytadi (tekis 0/90gradusga emas) — shunda tepa qirrasi
   // doim sal ko'rinib, kub "havoda muallaq" turganday taassurot beradi.
-  const SHOWCASE_TILT = -20;
-  let rotX = SHOWCASE_TILT, rotY = 32;
+  const SHOWCASE_TILT = -30;
+  let rotX = SHOWCASE_TILT, rotY = 45;
   let velX = 0, velY = 0;
   let dragging = false;
   let snapping = false;
@@ -344,7 +365,8 @@ function initSkillsCube(cube) {
   const SNAP_DELAY = 240;
   const SNAP_EASE = 0.1;
   const IDLE_DELAY = 1200;
-  const IDLE_SPEED = 0.15;
+  const rotationSeconds = Math.max(5, Number(window.__cubeRotationSeconds) || 40);
+  const IDLE_SPEED = 360 / (rotationSeconds * 60); // 60fps taxminiy davr
 
   function apply() {
     cube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
@@ -405,7 +427,7 @@ function initSkillsCube(cube) {
       }
       if (snapping) {
         const targetX = SHOWCASE_TILT;
-        const targetY = Math.round(rotY / 90) * 90;
+        const targetY = Math.round((rotY - 45) / 90) * 90 + 45;
         rotX += (targetX - rotX) * SNAP_EASE;
         rotY += (targetY - rotY) * SNAP_EASE;
         if (Math.abs(targetX - rotX) < 0.25 && Math.abs(targetY - rotY) < 0.25) {
@@ -922,7 +944,7 @@ let publicHashListenerAttached = false;
 
 /* Bosh sahifa uchun HTML skelet + kerakli render funksiyalarini ishga tushiradi.
    router.js shu funksiyani chaqiradi. */
-function mountPublicApp() {
+async function mountPublicApp() {
   const root = document.getElementById("app-root");
   root.innerHTML = `
     <div class="page-wrap">
@@ -948,8 +970,8 @@ function mountPublicApp() {
   navTabsEl = document.getElementById("nav-tabs");
   sidebarEl = document.getElementById("sidebar-root");
 
-  applySiteSettings();
   renderSidebar();
+  await applySiteSettings();
   router();
 
   if (!publicHashListenerAttached) {

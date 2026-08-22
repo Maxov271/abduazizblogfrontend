@@ -151,20 +151,20 @@ const ADMIN_MODELS = {
   team: {
     label: "Mening Jamoam", endpoint: "/admin/team/",
     fields: [
-      { name: "name", label: "Ism", type: "text" },
-      { name: "role", label: "Lavozim", type: "text" },
-      { name: "avatar", label: "Rasm", type: "image" },
-      { name: "icon", label: "Ikonka", type: "select", options: [
+      { name: "name", label: "Ism", type: "text", section: "Asosiy ma'lumotlar" },
+      { name: "role", label: "Lavozim", type: "text", section: "Asosiy ma'lumotlar" },
+      { name: "avatar", label: "Rasm", type: "image", section: "Asosiy ma'lumotlar" },
+      { name: "icon", label: "Ikonka", type: "select", section: "Ko'rinish", options: [
         ["code","Kod </>"],["server","Server"],["palette","Dizayn"],["rocket","Raketa"],
         ["brain","AI / Miya"],["layers","Layers"],["bolt","Chaqmoq"]] },
-      { name: "accent_color", label: "Ikon foni (hex)", type: "text" },
-      { name: "skills", label: "Ko'nikmalar (vergul bilan)", type: "text" },
-      { name: "description", label: "Tavsif", type: "textarea" },
-      { name: "github_url", label: "GitHub havola", type: "url" },
-      { name: "linkedin_url", label: "LinkedIn havola", type: "url" },
-      { name: "telegram_url", label: "Telegram havola", type: "url" },
-      { name: "portfolio_url", label: "Portfolio havola", type: "url" },
-      { name: "order", label: "Tartib", type: "number" },
+      { name: "accent_color", label: "Ikon foni (hex)", type: "text", section: "Ko'rinish" },
+      { name: "skills", label: "Ko'nikmalar (vergul bilan)", type: "text", section: "Ko'rinish" },
+      { name: "description", label: "Tavsif", type: "textarea", section: "Ko'rinish" },
+      { name: "github_url", label: "GitHub havola", type: "url", section: "Havolalar" },
+      { name: "linkedin_url", label: "LinkedIn havola", type: "url", section: "Havolalar" },
+      { name: "telegram_url", label: "Telegram havola", type: "url", section: "Havolalar" },
+      { name: "portfolio_url", label: "Portfolio havola", type: "url", section: "Havolalar" },
+      { name: "order", label: "Tartib", type: "number", section: "Havolalar" },
     ],
     columns: ["name", "role", "order"],
   },
@@ -179,16 +179,16 @@ const ADMIN_MODELS = {
   students: {
     label: "Mening O'quvchilarim", endpoint: "/admin/students/",
     fields: [
-      { name: "name", label: "Ism", type: "text" },
-      { name: "photo", label: "Rasm", type: "image" },
-      { name: "role", label: "Yo'nalish (masalan: Frontend Student)", type: "text" },
-      { name: "category", label: "Kategoriya", type: "fk", related: "student-categories", display: "name" },
-      { name: "skills", label: "Ko'nikmalar (vergul bilan)", type: "text" },
-      { name: "start_date", label: "Boshlanish sanasi", type: "date" },
-      { name: "end_date", label: "Tugash sanasi", type: "date" },
-      { name: "project_count", label: "Loyihalar soni", type: "number" },
-      { name: "portfolio_url", label: "Portfolio havola", type: "url" },
-      { name: "order", label: "Tartib", type: "number" },
+      { name: "name", label: "Ism", type: "text", section: "Asosiy ma'lumotlar" },
+      { name: "photo", label: "Rasm", type: "image", section: "Asosiy ma'lumotlar" },
+      { name: "role", label: "Yo'nalish (masalan: Frontend Student)", type: "text", section: "Asosiy ma'lumotlar" },
+      { name: "category", label: "Kategoriya", type: "fk", related: "student-categories", display: "name", section: "Asosiy ma'lumotlar" },
+      { name: "skills", label: "Ko'nikmalar (vergul bilan)", type: "text", section: "O'quv jarayoni" },
+      { name: "start_date", label: "Boshlanish sanasi", type: "date", section: "O'quv jarayoni" },
+      { name: "end_date", label: "Tugash sanasi", type: "date", section: "O'quv jarayoni" },
+      { name: "project_count", label: "Loyihalar soni", type: "number", section: "O'quv jarayoni" },
+      { name: "portfolio_url", label: "Portfolio havola", type: "url", section: "Havolalar" },
+      { name: "order", label: "Tartib", type: "number", section: "Havolalar" },
     ],
     columns: ["name", "category", "role", "project_count", "order"],
   },
@@ -214,29 +214,30 @@ const SINGLETONS = {
   profile: {
     label: "Profil", endpoint: "/admin/profile/",
     fields: [
-      { name: "full_name", label: "To'liq ism", type: "text" },
-      { name: "display_name", label: "Sidebar'dagi nom", type: "text" },
-      { name: "title", label: "Kasb (badge)", type: "text" },
-      { name: "avatar", label: "Rasm", type: "image" },
-      { name: "email", label: "Email", type: "email" },
-      { name: "phone", label: "Telefon", type: "text" },
-      { name: "birthday", label: "Tug'ilgan kun", type: "date" },
-      { name: "location", label: "Manzil", type: "text" },
-      { name: "about_intro", label: "About Me — 1-matn", type: "textarea" },
-      { name: "about_extra", label: "About Me — 2-matn", type: "textarea" },
+      { name: "full_name", label: "To'liq ism", type: "text", section: "Asosiy ma'lumotlar" },
+      { name: "display_name", label: "Sidebar'dagi nom", type: "text", section: "Asosiy ma'lumotlar" },
+      { name: "title", label: "Kasb (badge)", type: "text", section: "Asosiy ma'lumotlar" },
+      { name: "avatar", label: "Rasm", type: "image", section: "Asosiy ma'lumotlar" },
+      { name: "email", label: "Email", type: "email", section: "Kontakt" },
+      { name: "phone", label: "Telefon", type: "text", section: "Kontakt" },
+      { name: "birthday", label: "Tug'ilgan kun", type: "date", section: "Kontakt" },
+      { name: "location", label: "Manzil", type: "text", section: "Kontakt" },
+      { name: "about_intro", label: "About Me — 1-matn", type: "textarea", section: "About Me matni" },
+      { name: "about_extra", label: "About Me — 2-matn", type: "textarea", section: "About Me matni" },
     ],
   },
   "site-settings": {
     label: "Site sozlamalari", endpoint: "/admin/site-settings/",
     fields: [
-      { name: "site_name", label: "Sayt nomi", type: "text" },
-      { name: "favicon", label: "Favicon", type: "image" },
-      { name: "meta_description", label: "Meta tavsif", type: "text" },
-      { name: "meta_keywords", label: "Meta kalit so'zlar", type: "text" },
-      { name: "background_image", label: "Fon rasmi", type: "image" },
-      { name: "accent_color", label: "Asosiy rang (hex)", type: "text" },
-      { name: "telegram_bot_token", label: "Telegram bot token", type: "text" },
-      { name: "telegram_chat_id", label: "Telegram chat ID", type: "text" },
+      { name: "site_name", label: "Sayt nomi", type: "text", section: "Umumiy" },
+      { name: "favicon", label: "Favicon", type: "image", section: "Umumiy" },
+      { name: "background_image", label: "Fon rasmi", type: "image", section: "Umumiy" },
+      { name: "accent_color", label: "Asosiy rang (hex)", type: "text", section: "Umumiy" },
+      { name: "meta_description", label: "Meta tavsif", type: "text", section: "SEO" },
+      { name: "meta_keywords", label: "Meta kalit so'zlar", type: "text", section: "SEO" },
+      { name: "telegram_bot_token", label: "Telegram bot token", type: "text", section: "Telegram bildirishnomalari" },
+      { name: "telegram_chat_id", label: "Telegram chat ID", type: "text", section: "Telegram bildirishnomalari" },
+      { name: "cube_rotation_seconds", label: "Kubning bir to'liq aylanish vaqti (soniya)", type: "number", section: "3D Skills Cube" },
     ],
   },
   stats: {
@@ -475,7 +476,14 @@ async function openForm(key, obj) {
 /* ---------------- Field builders ---------------- */
 async function buildFieldsHtml(fields, obj) {
   const parts = [];
+  let lastSection;
+  let first = true;
   for (const f of fields) {
+    if (f.section && f.section !== lastSection) {
+      parts.push(`<h4 class="admin-form-section admin-span2${first ? " admin-form-section-first" : ""}">${esc2(f.section)}</h4>`);
+      lastSection = f.section;
+    }
+    first = false;
     const val = obj[f.name];
     parts.push(await buildOneField(f, val));
   }
@@ -485,10 +493,10 @@ async function buildFieldsHtml(fields, obj) {
 async function buildOneField(f, val) {
   const idAttr = `data-field="${f.name}" data-type="${f.type}"`;
   if (f.type === "readonly") {
-    return `<label class="admin-field"><span>${esc2(f.label)}</span><div class="admin-readonly-value">${esc2(val ?? "0")}</div></label>`;
+    return `<label class="admin-field admin-span2"><span>${esc2(f.label)}</span><div class="admin-readonly-value">${esc2(val ?? "0")}</div></label>`;
   }
   if (f.type === "textarea") {
-    return `<label class="admin-field"><span>${esc2(f.label)}</span><textarea ${idAttr} rows="4">${esc2(val || "")}</textarea></label>`;
+    return `<label class="admin-field admin-span2"><span>${esc2(f.label)}</span><textarea ${idAttr} rows="4">${esc2(val || "")}</textarea></label>`;
   }
   if (f.type === "bool") {
     return `<label class="admin-field admin-field-checkbox"><input type="checkbox" ${idAttr} ${val ? "checked" : ""}><span>${esc2(f.label)}</span></label>`;
@@ -500,7 +508,7 @@ async function buildOneField(f, val) {
   }
   if (f.type === "image") {
     const preview = val && typeof val === "string" ? `<img src="${val}" class="admin-image-preview">` : "";
-    return `<label class="admin-field">
+    return `<label class="admin-field admin-span2">
       <span>${esc2(f.label)}</span>
       ${preview}
       <input type="file" accept="image/*" ${idAttr}>
@@ -512,7 +520,7 @@ async function buildOneField(f, val) {
     try { options = await adminFetch(relCfg.endpoint); } catch (_) { options = []; }
     const currentVal = f.type === "fk" ? (val && val.id !== undefined ? val.id : val) : (Array.isArray(val) ? val.map(x => (x && x.id !== undefined ? x.id : x)) : []);
     const multiple = f.type === "m2m" ? "multiple" : "";
-    return `<label class="admin-field">
+    return `<label class="admin-field ${f.type === "m2m" ? "admin-span2" : ""}">
       <span>${esc2(f.label)}</span>
       <select ${idAttr} ${multiple}>
         ${f.type === "fk" ? `<option value="">—</option>` : ""}
