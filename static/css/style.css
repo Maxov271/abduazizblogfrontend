@@ -494,11 +494,15 @@ body.has-bg-image {
 .team-arrow-btn:hover { transform: scale(1.1) translateX(2px); }
 
 /* ---------- Skills cube (About Me -> What I Do) ---------- */
-.what-i-do-layout { display: flex; align-items: center; gap: 36px; flex-wrap: wrap; }
-.what-i-do-layout .card-grid-2 { flex: 1 1 360px; min-width: 280px; margin: 0; }
-.skills-cube-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; flex: 0 0 auto; margin: 0 auto; }
+.what-i-do-layout { display: flex; align-items: flex-start; gap: 28px; flex-wrap: wrap; }
+.what-i-do-layout .card-grid-2 { flex: 1 1 502px; min-width: 502px; margin: 0; }
+.skills-cube-wrap {
+  --cube-size: 190px; width: var(--cube-size);
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  flex: 0 0 auto; margin: 0 auto;
+}
 .skills-cube-scene {
-  --cube-size: 220px; width: var(--cube-size); height: var(--cube-size);
+  width: var(--cube-size); height: var(--cube-size);
   perspective: 1000px; touch-action: none; transition: transform .25s var(--ease);
 }
 .skills-cube-scene:hover { transform: scale(1.045); }
@@ -633,7 +637,7 @@ a:focus-visible, button:focus-visible, .form-input:focus-visible, .form-textarea
   .inside-grid, .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
 
   .what-i-do-layout { flex-direction: column; }
-  .skills-cube-scene { --cube-size: 190px; }
+  .skills-cube-wrap { --cube-size: 170px; }
 
   /* Kompakt mobil sarlavha: avatar + ism qatorda, kontaktlar "Show Contacts"
      bosilgandagina ochiladi. Sticky kerak emas — oddiy oqimda turadi. */
@@ -715,7 +719,7 @@ a:focus-visible, button:focus-visible, .form-input:focus-visible, .form-textarea
   .students-toolbar { flex-direction: column; align-items: stretch; }
   .student-search { max-width: none; }
 
-  .skills-cube-scene { --cube-size: 150px; }
+  .skills-cube-wrap { --cube-size: 140px; }
   .cube-face p { display: none; }
 
   .contact-card { padding: 20px; }
