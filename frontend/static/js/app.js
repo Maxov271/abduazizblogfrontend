@@ -344,7 +344,7 @@ function initSkillsCube(cube) {
   const SNAP_DELAY = 240;
   const SNAP_EASE = 0.1;
   const IDLE_DELAY = 1200;
-  const IDLE_SPEED = 0.018;
+  const IDLE_SPEED = 0.15;
 
   function apply() {
     cube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
