@@ -163,6 +163,7 @@ const ADMIN_MODELS = {
       { name: "github_url", label: "GitHub havola", type: "url" },
       { name: "linkedin_url", label: "LinkedIn havola", type: "url" },
       { name: "telegram_url", label: "Telegram havola", type: "url" },
+      { name: "portfolio_url", label: "Portfolio havola", type: "url" },
       { name: "order", label: "Tartib", type: "number" },
     ],
     columns: ["name", "role", "order"],

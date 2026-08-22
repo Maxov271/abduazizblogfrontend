@@ -792,7 +792,7 @@ async function routeTeam() {
   try {
     const members = await Api.team();
     const cards = members.map(m => {
-      const primaryLink = m.github_url || m.linkedin_url || m.telegram_url || "";
+      const primaryLink = m.portfolio_url || m.github_url || m.linkedin_url || m.telegram_url || "";
       return `
       <div class="team-card tilt-card" style="--accent-glow:${esc(m.accent_color)}">
         <span class="team-icon-badge" style="background:${esc(m.accent_color)}">${cardIconSvg(m.icon)}</span>
