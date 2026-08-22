@@ -143,8 +143,53 @@ const ADMIN_MODELS = {
       { name: "tags", label: "Teglar", type: "m2m", related: "tags", display: "name" },
       { name: "is_published", label: "Chop etilgan", type: "bool" },
       { name: "published_at", label: "Chop etilgan sana", type: "datetime" },
+      { name: "view_count", label: "Tabiy ko'rishlar soni", type: "readonly" },
+      { name: "view_boost", label: "Ko'rishlar sonini sun'iy oshirish", type: "number" },
     ],
     columns: ["title", "is_published", "published_at"],
+  },
+  team: {
+    label: "Mening Jamoam", endpoint: "/admin/team/",
+    fields: [
+      { name: "name", label: "Ism", type: "text" },
+      { name: "role", label: "Lavozim", type: "text" },
+      { name: "avatar", label: "Rasm", type: "image" },
+      { name: "icon", label: "Ikonka", type: "select", options: [
+        ["code","Kod </>"],["server","Server"],["palette","Dizayn"],["rocket","Raketa"],
+        ["brain","AI / Miya"],["layers","Layers"],["bolt","Chaqmoq"]] },
+      { name: "accent_color", label: "Ikon foni (hex)", type: "text" },
+      { name: "skills", label: "Ko'nikmalar (vergul bilan)", type: "text" },
+      { name: "description", label: "Tavsif", type: "textarea" },
+      { name: "github_url", label: "GitHub havola", type: "url" },
+      { name: "linkedin_url", label: "LinkedIn havola", type: "url" },
+      { name: "telegram_url", label: "Telegram havola", type: "url" },
+      { name: "order", label: "Tartib", type: "number" },
+    ],
+    columns: ["name", "role", "order"],
+  },
+  "student-categories": {
+    label: "O'quvchi kategoriyalari", endpoint: "/admin/student-categories/",
+    fields: [
+      { name: "name", label: "Nomi", type: "text" },
+      { name: "order", label: "Tartib", type: "number" },
+    ],
+    columns: ["name", "slug", "order"],
+  },
+  students: {
+    label: "Mening O'quvchilarim", endpoint: "/admin/students/",
+    fields: [
+      { name: "name", label: "Ism", type: "text" },
+      { name: "photo", label: "Rasm", type: "image" },
+      { name: "role", label: "Yo'nalish (masalan: Frontend Student)", type: "text" },
+      { name: "category", label: "Kategoriya", type: "fk", related: "student-categories", display: "name" },
+      { name: "skills", label: "Ko'nikmalar (vergul bilan)", type: "text" },
+      { name: "start_date", label: "Boshlanish sanasi", type: "date" },
+      { name: "end_date", label: "Tugash sanasi", type: "date" },
+      { name: "project_count", label: "Loyihalar soni", type: "number" },
+      { name: "portfolio_url", label: "Portfolio havola", type: "url" },
+      { name: "order", label: "Tartib", type: "number" },
+    ],
+    columns: ["name", "category", "role", "project_count", "order"],
   },
   comments: {
     label: "Izohlar (tasdiqlash)", endpoint: "/admin/comments/",
@@ -191,6 +236,13 @@ const SINGLETONS = {
       { name: "accent_color", label: "Asosiy rang (hex)", type: "text" },
       { name: "telegram_bot_token", label: "Telegram bot token", type: "text" },
       { name: "telegram_chat_id", label: "Telegram chat ID", type: "text" },
+    ],
+  },
+  stats: {
+    label: "Sayt statistikasi", endpoint: "/admin/stats/",
+    fields: [
+      { name: "total_visits", label: "Tabiy (real) tashriflar soni", type: "readonly" },
+      { name: "visits_boost", label: "Tashriflar sonini sun'iy oshirish", type: "number" },
     ],
   },
 };
@@ -422,6 +474,9 @@ async function buildFieldsHtml(fields, obj) {
 
 async function buildOneField(f, val) {
   const idAttr = `data-field="${f.name}" data-type="${f.type}"`;
+  if (f.type === "readonly") {
+    return `<label class="admin-field"><span>${esc2(f.label)}</span><div class="admin-readonly-value">${esc2(val ?? "0")}</div></label>`;
+  }
   if (f.type === "textarea") {
     return `<label class="admin-field"><span>${esc2(f.label)}</span><textarea ${idAttr} rows="4">${esc2(val || "")}</textarea></label>`;
   }

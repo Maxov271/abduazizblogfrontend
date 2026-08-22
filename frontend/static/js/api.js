@@ -42,4 +42,9 @@ const Api = {
   threadComments: (slug) => apiGet(`/thread/${encodeURIComponent(slug)}/comments/`),
   postComment: (slug, data) => apiPost(`/thread/${encodeURIComponent(slug)}/comments/create/`, data),
   sendContact: (data) => apiPost("/contact/", data),
+  team: () => apiGet("/team/"),
+  studentCategories: () => apiGet("/student-categories/"),
+  studentList: (category) => apiGet(`/students/${category && category !== "all" ? `?category=${encodeURIComponent(category)}` : ""}`),
+  siteStats: () => apiGet("/stats/"),
+  trackVisit: () => apiPost("/stats/track-visit/", {}),
 };

@@ -192,6 +192,23 @@ function formatDate(iso) {
   } catch { return iso; }
 }
 
+function formatMonthYear(iso) {
+  try {
+    const d = new Date(iso + "T00:00:00");
+    return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  } catch { return iso; }
+}
+
+/* Kategoriya nomidan barqaror rang tanlaydi — admin qanday nom qo'ymasin,
+   bir xil kategoriya doim bir xil rangga ega bo'ladi. */
+const STUDENT_PALETTE = ["#2f6bff", "#22c55e", "#a855f7", "#f97316", "#ec4899", "#06b6d4"];
+function paletteColor(seed) {
+  const str = String(seed);
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+  return STUDENT_PALETTE[hash % STUDENT_PALETTE.length];
+}
+
 function contactRow(iconKey, label, value) {
   return `<div class="contact-row">
     <span class="contact-icon">${contactIconSvg(iconKey)}</span>
@@ -219,6 +236,7 @@ function cardIconSvg(key) {
     "device-mobile": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 19h4" stroke-linecap="round"/></svg>`,
     layers: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     bolt: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke-linejoin="round"/></svg>`,
+    server: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><circle cx="7" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="7" cy="17" r="1" fill="currentColor" stroke="none"/></svg>`,
   };
   return icons[key] || `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>`;
 }
@@ -270,9 +288,16 @@ async function routeAbout() {
   setActiveTab("about");
   contentEl.innerHTML = `<p class="loading-text">Yuklanmoqda...</p>`;
   try {
-    const [profile, services, insideWorld] = await Promise.all([
-      Api.profile(), Api.services(), Api.insideWorld(),
+    const [profile, services, insideWorld, stats] = await Promise.all([
+      Api.profile(), Api.services(), Api.insideWorld(), Api.siteStats().catch(() => null),
     ]);
+
+    const statsHtml = stats ? `
+      <div class="stats-bar">
+        <div class="stat-chip"><span class="stat-icon">👁️</span><b>${stats.visits}</b><span>tashrif</span></div>
+        <div class="stat-chip"><span class="stat-icon">💬</span><b>${stats.comments}</b><span>izoh</span></div>
+        <div class="stat-chip"><span class="stat-icon">✉️</span><b>${stats.contact_messages}</b><span>so'rov</span></div>
+      </div>` : "";
 
     const servicesHtml = services.length ? `
       <h2 class="section-title">What I Do</h2>
@@ -302,6 +327,7 @@ async function routeAbout() {
     contentEl.innerHTML = `
       <h1 class="page-title">About Me</h1>
       <div class="title-underline"></div>
+      ${statsHtml}
       ${profile.about_intro ? `<p class="lead-text">${nl2br(profile.about_intro)}</p>` : ""}
       ${profile.about_extra ? `<p class="lead-text">${nl2br(profile.about_extra)}</p>` : ""}
       ${servicesHtml}
@@ -462,7 +488,7 @@ async function routeThread() {
     const posts = await Api.threadList();
     const grid = posts.length ? posts.map(post => `
       <a class="thread-card" href="#/thread/${encodeURIComponent(post.slug)}">
-        <div class="thread-meta">${formatDate(post.published_at)} &nbsp; <span class="read-time">${post.read_minutes} min read</span></div>
+        <div class="thread-meta">${formatDate(post.published_at)} &nbsp; <span class="read-time">${post.read_minutes} min read</span> &nbsp; <span class="thread-stat">👁️ ${post.views}</span> &nbsp; <span class="thread-stat">💬 ${post.comment_count}</span></div>
         <h3>${esc(post.title)}</h3>
         <p>${esc(post.excerpt)}</p>
         <div class="tag-row">${post.tags.map(t => `<span class="tag-pill">${esc(t.name)}</span>`).join("")}</div>
@@ -496,7 +522,7 @@ async function routeThreadDetail(slug) {
       <a href="#/thread" style="color:var(--accent); text-decoration:none; font-size:14px;">&larr; Thread'ga qaytish</a>
       <h1 class="page-title" style="margin-top:14px">${esc(post.title)}</h1>
       <div class="title-underline"></div>
-      <div class="thread-meta" style="margin-bottom:24px">${formatDate(post.published_at)} &nbsp; <span class="read-time">${post.read_minutes} min read</span></div>
+      <div class="thread-meta" style="margin-bottom:24px">${formatDate(post.published_at)} &nbsp; <span class="read-time">${post.read_minutes} min read</span> &nbsp; <span class="thread-stat">👁️ ${post.views} ko'rish</span> &nbsp; <span class="thread-stat">💬 ${post.comment_count} izoh</span></div>
       ${post.cover_image ? `<div class="post-cover"><img src="${post.cover_image}" alt="${esc(post.title)}"></div>` : ""}
       <div class="post-body">${nl2br(post.body)}</div>
       ${post.tags.length ? `<div class="tag-row" style="margin-top:22px">${post.tags.map(t => `<span class="tag-pill">${esc(t.name)}</span>`).join("")}</div>` : ""}
@@ -534,6 +560,100 @@ async function routeThreadDetail(slug) {
   }
 }
 
+/* ---------------- Route: Team ---------------- */
+async function routeTeam() {
+  setActiveTab("team");
+  contentEl.innerHTML = `<p class="loading-text">Yuklanmoqda...</p>`;
+  try {
+    const members = await Api.team();
+    const grid = members.length ? members.map(m => `
+      <div class="team-card">
+        <span class="team-icon-badge" style="background:${esc(m.accent_color)}">${cardIconSvg(m.icon)}</span>
+        <div class="team-avatar">${m.avatar ? `<img src="${m.avatar}" alt="${esc(m.name)}">` : `<span class="avatar-placeholder">🙂</span>`}</div>
+        <h3>${esc(m.name)}</h3>
+        <span class="team-role">${esc(m.role)}</span>
+        ${m.skills ? `<div class="tag-row team-tags">${m.skills.split(",").filter(s => s.trim()).map(s => `<span class="tag-pill">${esc(s.trim())}</span>`).join("")}</div>` : ""}
+        ${m.description ? `<p class="team-desc">${esc(m.description)}</p>` : ""}
+        <div class="team-footer">
+          <div class="team-socials">
+            ${m.github_url ? `<a href="${esc(m.github_url)}" target="_blank" rel="noopener" title="GitHub">${socialIconSvg("github")}</a>` : ""}
+            ${m.linkedin_url ? `<a href="${esc(m.linkedin_url)}" target="_blank" rel="noopener" title="LinkedIn">${socialIconSvg("linkedin")}</a>` : ""}
+            ${m.telegram_url ? `<a href="${esc(m.telegram_url)}" target="_blank" rel="noopener" title="Telegram">${socialIconSvg("telegram")}</a>` : ""}
+          </div>
+        </div>
+      </div>`).join("") : `<p class="lead-text">Hozircha jamoa a'zolari qo'shilmagan.</p>`;
+
+    contentEl.innerHTML = `
+      <h1 class="page-title">Mening Jamoam 🚀</h1>
+      <div class="title-underline"></div>
+      <p class="lead-text" style="margin-top:-14px">Har bir loyiha ortida zo'r jamoa bor.</p>
+      <div class="team-grid">${grid}</div>
+    `;
+  } catch (e) {
+    contentEl.innerHTML = `<p class="loading-text">Ma'lumot yuklanmadi.</p>`;
+  }
+}
+
+/* ---------------- Route: Students ---------------- */
+async function routeStudents(activeCategory = "all") {
+  setActiveTab("students");
+  contentEl.innerHTML = `<p class="loading-text">Yuklanmoqda...</p>`;
+  try {
+    const [categories, students] = await Promise.all([
+      Api.studentCategories(), Api.studentList(activeCategory),
+    ]);
+
+    const tabsHtml = `
+      <a href="#/students" class="${activeCategory === "all" ? "active" : ""}">Barchasi</a>
+      ${categories.map(c => `<a href="#/students?category=${encodeURIComponent(c.slug)}" class="${activeCategory === c.slug ? "active" : ""}">${esc(c.name)}</a>`).join("")}
+    `;
+
+    const cardsHtml = students.length ? students.map(s => {
+      const catColor = paletteColor(s.category ? s.category.slug : "default");
+      const dateRange = (s.start_date || s.end_date)
+        ? `${s.start_date ? formatMonthYear(s.start_date) : ""} – ${s.end_date ? formatMonthYear(s.end_date) : "hozir"}`
+        : "";
+      return `
+      <div class="student-card" data-name="${esc(s.name.toLowerCase())}" style="--cat-color:${catColor}">
+        <div class="student-photo-ring">
+          <div class="student-photo">${s.photo ? `<img src="${s.photo}" alt="${esc(s.name)}">` : `<span class="avatar-placeholder">🙂</span>`}</div>
+        </div>
+        <h3>${esc(s.name)}</h3>
+        <span class="student-role">${esc(s.role)}</span>
+        ${s.skills ? `<div class="tag-row student-tags">${s.skills.split(",").filter(t => t.trim()).map(t => `<span class="tag-pill">${esc(t.trim())}</span>`).join("")}</div>` : ""}
+        <div class="student-meta">
+          ${dateRange ? `<span>${dateRange}</span>` : ""}
+          <span>${s.project_count} ta loyiha</span>
+        </div>
+        ${s.portfolio_url ? `<a class="student-btn" href="${esc(s.portfolio_url)}" target="_blank" rel="noopener">📁 Portfolio &rarr;</a>` : ""}
+      </div>`;
+    }).join("") : `<p class="lead-text">Hozircha o'quvchilar qo'shilmagan.</p>`;
+
+    contentEl.innerHTML = `
+      <h1 class="page-title">Mening O'quvchilarim 🎓</h1>
+      <div class="title-underline"></div>
+      <p class="lead-text" style="margin-top:-14px">Bilim ulashish — eng katta boylik.</p>
+      <div class="students-toolbar">
+        <div class="filter-tabs">${tabsHtml}</div>
+        <input type="search" id="student-search" class="form-input student-search" placeholder="O'quvchi qidirish...">
+      </div>
+      <div class="students-grid" id="students-grid">${cardsHtml}</div>
+    `;
+
+    const searchInput = document.getElementById("student-search");
+    if (searchInput) {
+      searchInput.addEventListener("input", (ev) => {
+        const q = ev.target.value.trim().toLowerCase();
+        document.querySelectorAll("#students-grid .student-card").forEach(card => {
+          card.classList.toggle("hidden", !!q && !card.dataset.name.includes(q));
+        });
+      });
+    }
+  } catch (e) {
+    contentEl.innerHTML = `<p class="loading-text">Ma'lumot yuklanmadi.</p>`;
+  }
+}
+
 /* ---------------- Router ---------------- */
 function parseHash() {
   const raw = location.hash.replace(/^#\/?/, "");
@@ -550,6 +670,8 @@ function router() {
   if (!section || section === "about") return routeAbout();
   if (section === "resume") return routeResume();
   if (section === "portfolio") return param ? routePortfolioDetail(param) : routePortfolio(query.get("category") || "all");
+  if (section === "team") return routeTeam();
+  if (section === "students") return routeStudents(query.get("category") || "all");
   if (section === "thread") return param ? routeThreadDetail(param) : routeThread();
   return routeAbout();
 }
@@ -570,6 +692,8 @@ function mountPublicApp() {
           <a href="#/about" data-tab="about">About</a>
           <a href="#/resume" data-tab="resume">Resume</a>
           <a href="#/portfolio" data-tab="portfolio">Portfolio</a>
+          <a href="#/team" data-tab="team">Team</a>
+          <a href="#/students" data-tab="students">Students</a>
           <a href="#/thread" data-tab="thread">Thread</a>
         </nav>
         <div id="content-panel-body">
@@ -591,6 +715,11 @@ function mountPublicApp() {
       if (window.__activeApp === "public") router();
     });
     publicHashListenerAttached = true;
+  }
+
+  if (!window.__visitTracked) {
+    window.__visitTracked = true;
+    Api.trackVisit().catch(() => {});
   }
 }
 

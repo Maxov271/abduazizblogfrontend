@@ -270,7 +270,8 @@ body.has-bg-image {
 .card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px -16px rgba(24, 39, 92, 0.28); }
 /* Ekran o'lchami o'zgarganda kartalar joyi silliq animatsiya bilan almashinadi
    (qo'llab-quvvatlaydigan brauzerlarda grid ustunlari/oraliqlari tween qilinadi). */
-.card-grid-2, .inside-grid, .portfolio-grid, .portfolio-gallery-grid, .thread-grid {
+.card-grid-2, .inside-grid, .portfolio-grid, .portfolio-gallery-grid, .thread-grid,
+.team-grid, .students-grid {
   transition: grid-template-columns .5s var(--ease), gap .4s var(--ease);
 }
 
@@ -383,6 +384,103 @@ body.has-bg-image {
 .inside-list li { font-size: 14.5px; line-height: 1.55; color: var(--text-muted); }
 .inside-grid .card:nth-child(2) { animation-delay: .06s; }
 .inside-grid .card:nth-child(3) { animation-delay: .12s; }
+
+/* ---------- Stats bar (About) ---------- */
+.stats-bar { display: flex; flex-wrap: wrap; gap: 14px; margin: 4px 0 24px; }
+.stat-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--accent-soft); color: var(--accent);
+  border-radius: 999px; padding: 8px 16px; font-size: 14px;
+  animation: fadeInUp .5s var(--ease) both;
+}
+.stat-chip b { font-size: 15px; color: var(--text-dark); }
+.stat-icon { font-size: 15px; }
+.stat-chip:nth-child(2) { animation-delay: .06s; }
+.stat-chip:nth-child(3) { animation-delay: .12s; }
+.thread-stat { color: var(--text-muted); }
+
+/* ---------- Team (Mening Jamoam) ---------- */
+.team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+.team-card {
+  position: relative;
+  background: #fff; border-radius: var(--radius-md); padding: 28px 24px 24px;
+  box-shadow: var(--shadow-card); text-align: center;
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+  animation: fadeInUp .5s var(--ease) both;
+}
+.team-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px -16px rgba(24, 39, 92, 0.28); }
+.team-grid .team-card:nth-child(2) { animation-delay: .06s; }
+.team-grid .team-card:nth-child(3) { animation-delay: .12s; }
+.team-grid .team-card:nth-child(4) { animation-delay: .18s; }
+.team-icon-badge {
+  position: absolute; top: 16px; left: 16px;
+  width: 34px; height: 34px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; box-shadow: 0 4px 10px -2px rgba(0,0,0,.25);
+}
+.team-icon-badge svg { width: 18px; height: 18px; }
+.team-avatar {
+  width: 96px; height: 96px; margin: 0 auto 14px;
+  border-radius: 50%; overflow: hidden; background: #eef1f8;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px;
+}
+.team-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.team-card h3 { margin: 0 0 4px; font-size: 17px; font-weight: 700; }
+.team-role { display: block; color: var(--accent); font-size: 13.5px; font-weight: 600; margin-bottom: 14px; }
+.team-tags { justify-content: center; margin-bottom: 12px; }
+.team-desc { color: var(--text-muted); font-size: 13.5px; line-height: 1.6; margin: 0 0 16px; }
+.team-footer { display: flex; justify-content: center; }
+.team-socials { display: flex; gap: 10px; }
+.team-socials a {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: #eef1f8; color: var(--text-dark);
+  transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+}
+.team-socials a:hover { background: var(--accent); color: #fff; transform: translateY(-2px); }
+.team-socials svg { width: 16px; height: 16px; }
+
+/* ---------- Students (Mening O'quvchilarim) ---------- */
+.students-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 26px; }
+.students-toolbar .filter-tabs { margin-bottom: 0; }
+.student-search { max-width: 240px; border-bottom: 1.5px solid #e3e7f3; }
+.students-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 22px; }
+.student-card {
+  background: #fff; border-radius: var(--radius-md); padding: 24px 20px; text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease), opacity .2s var(--ease);
+  animation: fadeInUp .5s var(--ease) both;
+}
+.student-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px -16px rgba(24, 39, 92, 0.28); }
+.student-card.hidden { display: none; }
+.students-grid .student-card:nth-child(2) { animation-delay: .05s; }
+.students-grid .student-card:nth-child(3) { animation-delay: .1s; }
+.students-grid .student-card:nth-child(4) { animation-delay: .15s; }
+.students-grid .student-card:nth-child(5) { animation-delay: .2s; }
+.student-photo-ring {
+  width: 84px; height: 84px; margin: 0 auto 14px; padding: 3px;
+  border-radius: 50%; background: var(--cat-color, var(--accent));
+}
+.student-photo {
+  width: 100%; height: 100%; border-radius: 50%; overflow: hidden;
+  background: #eef1f8; border: 3px solid #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 32px;
+}
+.student-photo img { width: 100%; height: 100%; object-fit: cover; }
+.student-card h3 { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
+.student-role { display: block; color: var(--cat-color, var(--accent)); font-size: 12.5px; font-weight: 600; margin-bottom: 12px; }
+.student-tags { justify-content: center; margin-bottom: 12px; }
+.student-tags .tag-pill { font-size: 11.5px; padding: 4px 10px; }
+.student-meta { display: flex; flex-direction: column; gap: 2px; color: var(--text-muted); font-size: 12.5px; margin-bottom: 16px; }
+.student-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--cat-color, var(--accent)); color: #fff;
+  border: none; border-radius: 999px; padding: 9px 18px;
+  font-size: 13px; font-weight: 600; text-decoration: none;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease);
+}
+.student-btn:hover { opacity: .92; transform: translateY(-2px); box-shadow: 0 10px 20px -8px var(--cat-color, var(--accent)); }
 
 /* ---------- Contact form ---------- */
 .contact-card { background: #fff; border-radius: var(--radius-md); padding: 30px; margin-top: 20px; box-shadow: var(--shadow-card); animation: fadeInUp .5s var(--ease) both; }
@@ -514,6 +612,14 @@ a:focus-visible, button:focus-visible, .form-input:focus-visible, .form-textarea
   .filter-tabs { gap: 16px 20px; }
   .portfolio-grid, .thread-grid { gap: 16px; }
   .thread-card { padding: 18px; }
+
+  .stats-bar { gap: 10px; }
+  .stat-chip { padding: 7px 13px; font-size: 13px; }
+
+  .team-grid, .students-grid { gap: 14px; }
+  .team-card { padding: 24px 18px 20px; }
+  .students-toolbar { flex-direction: column; align-items: stretch; }
+  .student-search { max-width: none; }
 
   .contact-card { padding: 20px; }
   .contact-heading { font-size: 20px; }
