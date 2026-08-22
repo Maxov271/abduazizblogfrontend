@@ -328,7 +328,11 @@ function initSkillsCube(cube) {
   if (!cube || cube.dataset.inited) return;
   cube.dataset.inited = "1";
 
-  let rotX = -14, rotY = 26;
+  // Doimiy "vitrina" og'ishi: kub qo'yib yuborilgandan keyin har doim shu
+  // burchakka qaytadi (tekis 0/90gradusga emas) — shunda tepa qirrasi
+  // doim sal ko'rinib, kub "havoda muallaq" turganday taassurot beradi.
+  const SHOWCASE_TILT = -20;
+  let rotX = SHOWCASE_TILT, rotY = 32;
   let velX = 0, velY = 0;
   let dragging = false;
   let snapping = false;
@@ -338,9 +342,9 @@ function initSkillsCube(cube) {
   const FRICTION = 0.945;
   const VEL_STOP = 0.02;
   const SNAP_DELAY = 240;
-  const SNAP_EASE = 0.12;
-  const IDLE_DELAY = 1500;
-  const IDLE_SPEED = 0.05;
+  const SNAP_EASE = 0.1;
+  const IDLE_DELAY = 1200;
+  const IDLE_SPEED = 0.018;
 
   function apply() {
     cube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
@@ -400,7 +404,7 @@ function initSkillsCube(cube) {
         snapping = true;
       }
       if (snapping) {
-        const targetX = Math.max(-85, Math.min(85, Math.round(rotX / 90) * 90));
+        const targetX = SHOWCASE_TILT;
         const targetY = Math.round(rotY / 90) * 90;
         rotX += (targetX - rotX) * SNAP_EASE;
         rotY += (targetY - rotY) * SNAP_EASE;
@@ -433,14 +437,18 @@ function initTiltCards(root) {
       const r = card.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width;
       const py = (e.clientY - r.top) / r.height;
-      const rx = (0.5 - py) * 12;
-      const ry = (px - 0.5) * 12;
-      card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`;
+      const rx = (0.5 - py) * 26;
+      const ry = (px - 0.5) * 26;
+      const shadowX = (px - 0.5) * -30;
+      const shadowY = (py - 0.5) * -30;
+      card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px) scale(1.02)`;
+      card.style.boxShadow = `${shadowX}px ${shadowY}px 34px -12px rgba(24,39,92,.45)`;
       card.style.setProperty("--mx", `${px * 100}%`);
       card.style.setProperty("--my", `${py * 100}%`);
     }
     function onLeave() {
       card.style.transform = "";
+      card.style.boxShadow = "";
       card.style.removeProperty("--mx");
       card.style.removeProperty("--my");
     }
@@ -510,15 +518,12 @@ async function routeAbout() {
 
     const servicesHtml = services.length ? `
       <h2 class="section-title">What I Do</h2>
-      <div class="what-i-do-layout">
-        ${renderSkillsCube()}
-        <div class="card-grid-2">
-          ${services.map(s => `
-            <div class="card tilt-card">
-              <span class="card-icon">${cardIconSvg(s.icon)}</span>
-              <div><h3>${esc(s.title)}</h3><p>${esc(s.description)}</p></div>
-            </div>`).join("")}
-        </div>
+      <div class="card-grid-2">
+        ${services.map(s => `
+          <div class="card tilt-card">
+            <span class="card-icon">${cardIconSvg(s.icon)}</span>
+            <div><h3>${esc(s.title)}</h3><p>${esc(s.description)}</p></div>
+          </div>`).join("")}
       </div>` : "";
 
     const insideHtml = insideWorld.length ? `
@@ -540,8 +545,13 @@ async function routeAbout() {
       <h1 class="page-title">About Me</h1>
       <div class="title-underline"></div>
       ${statsHtml}
-      ${profile.about_intro ? `<p class="lead-text">${nl2br(profile.about_intro)}</p>` : ""}
-      ${profile.about_extra ? `<p class="lead-text">${nl2br(profile.about_extra)}</p>` : ""}
+      <div class="about-hero-layout">
+        <div class="about-hero-text">
+          ${profile.about_intro ? `<p class="lead-text">${nl2br(profile.about_intro)}</p>` : ""}
+          ${profile.about_extra ? `<p class="lead-text">${nl2br(profile.about_extra)}</p>` : ""}
+        </div>
+        ${renderSkillsCube()}
+      </div>
       ${servicesHtml}
       ${insideHtml}
       <div class="contact-card">

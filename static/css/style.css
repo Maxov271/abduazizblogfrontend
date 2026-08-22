@@ -278,10 +278,11 @@ body.has-bg-image {
 .tilt-card::after {
   content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;
   border-radius: inherit; opacity: 0; mix-blend-mode: overlay;
-  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.6), transparent 55%);
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.35), transparent 55%);
   transition: opacity .25s var(--ease);
 }
 .tilt-card:hover::after { opacity: 1; }
+.tilt-card:hover { transition: box-shadow .1s var(--ease); }
 @media (hover: none), (pointer: coarse) {
   .tilt-card::after { display: none; }
 }
@@ -493,19 +494,28 @@ body.has-bg-image {
 .team-arrow-btn svg { width: 16px; height: 16px; }
 .team-arrow-btn:hover { transform: scale(1.1) translateX(2px); }
 
-/* ---------- Skills cube (About Me -> What I Do) ---------- */
-.what-i-do-layout { display: flex; align-items: flex-start; gap: 28px; flex-wrap: wrap; }
-.what-i-do-layout .card-grid-2 { flex: 1 1 502px; min-width: 502px; margin: 0; }
+/* ---------- Skills cube (About Me hero) ---------- */
+.about-hero-layout { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; margin-bottom: 8px; }
+.about-hero-text { flex: 1 1 360px; min-width: 280px; }
+.about-hero-text .lead-text:last-child { margin-bottom: 0; }
 .skills-cube-wrap {
-  --cube-size: 190px; width: var(--cube-size);
-  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  --cube-size: 250px; width: var(--cube-size);
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
   flex: 0 0 auto; margin: 0 auto;
 }
 .skills-cube-scene {
-  width: var(--cube-size); height: var(--cube-size);
-  perspective: 1000px; touch-action: none; transition: transform .25s var(--ease);
+  position: relative; width: var(--cube-size); height: var(--cube-size);
+  perspective: 1100px; touch-action: none; transition: transform .25s var(--ease);
 }
 .skills-cube-scene:hover { transform: scale(1.045); }
+/* Kub aylanmaydigan, statik soya — "havoda muallaq" turgan taassurotni beradi */
+.skills-cube-scene::after {
+  content: ""; position: absolute; z-index: -1;
+  left: 50%; bottom: -22px; transform: translateX(-50%);
+  width: 70%; height: calc(var(--cube-size) * 0.12);
+  background: radial-gradient(ellipse at center, rgba(20, 26, 60, 0.4), transparent 72%);
+  filter: blur(3px);
+}
 .skills-cube {
   width: 100%; height: 100%; position: relative; transform-style: preserve-3d;
   cursor: grab; will-change: transform; user-select: none;
@@ -636,8 +646,8 @@ a:focus-visible, button:focus-visible, .form-input:focus-visible, .form-textarea
   .card-grid-2, .form-grid { grid-template-columns: 1fr; }
   .inside-grid, .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
 
-  .what-i-do-layout { flex-direction: column; }
-  .skills-cube-wrap { --cube-size: 170px; }
+  .about-hero-layout { flex-direction: column-reverse; align-items: center; gap: 24px; }
+  .skills-cube-wrap { --cube-size: 190px; }
 
   /* Kompakt mobil sarlavha: avatar + ism qatorda, kontaktlar "Show Contacts"
      bosilgandagina ochiladi. Sticky kerak emas — oddiy oqimda turadi. */
