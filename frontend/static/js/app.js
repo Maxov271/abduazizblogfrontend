@@ -364,7 +364,7 @@ function initSkillsCube(cube) {
   const VEL_STOP = 0.02;
   const SNAP_DELAY = 240;
   const SNAP_EASE = 0.1;
-  const IDLE_DELAY = 1200;
+  const IDLE_DELAY = 500;
   const rotationSeconds = Math.max(5, Number(window.__cubeRotationSeconds) || 40);
   const IDLE_SPEED = 360 / (rotationSeconds * 60); // 60fps taxminiy davr
 
@@ -412,37 +412,40 @@ function initSkillsCube(cube) {
 
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  function tick() {
-    if (!document.body.contains(cube)) return; // sahifadan chiqilgan — davrni to'xtatamiz
+  /* setInterval ishlatiladi, chunki requestAnimationFrame ba'zi brauzer
+     holatlarida (masalan sahifa fokusda bo'lmasa yoki ba'zi kengaytmalar
+     bilan) chegaralanib qolishi mumkin — kub esa doim, tegilmasa ham
+     ishonchli aylanib turishi kerak. */
+  let lastTickAt = performance.now();
+  const timerId = setInterval(() => {
+    if (!document.body.contains(cube)) { clearInterval(timerId); return; } // sahifadan chiqilgan — davrni to'xtatamiz
     const now = performance.now();
-    if (!dragging) {
-      if (Math.abs(velX) > VEL_STOP || Math.abs(velY) > VEL_STOP) {
-        rotX = Math.max(-85, Math.min(85, rotX + velX));
-        rotY += velY;
-        velX *= FRICTION;
-        velY *= FRICTION;
-        snapping = false;
-      } else if (!snapping && now - lastInteraction > SNAP_DELAY) {
-        snapping = true;
-      }
-      if (snapping) {
-        const targetX = SHOWCASE_TILT;
-        const targetY = Math.round((rotY - 45) / 90) * 90 + 45;
-        rotX += (targetX - rotX) * SNAP_EASE;
-        rotY += (targetY - rotY) * SNAP_EASE;
-        if (Math.abs(targetX - rotX) < 0.25 && Math.abs(targetY - rotY) < 0.25) {
-          rotX = targetX; rotY = targetY;
-          snapping = false;
-          lastInteraction = now;
-        }
-      } else if (now - lastInteraction > IDLE_DELAY) {
-        rotY += IDLE_SPEED;
-      }
-      apply();
+    lastTickAt = now;
+    if (dragging) return;
+    if (Math.abs(velX) > VEL_STOP || Math.abs(velY) > VEL_STOP) {
+      rotX = Math.max(-85, Math.min(85, rotX + velX));
+      rotY += velY;
+      velX *= FRICTION;
+      velY *= FRICTION;
+      snapping = false;
+    } else if (!snapping && now - lastInteraction > SNAP_DELAY) {
+      snapping = true;
     }
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
+    if (snapping) {
+      const targetX = SHOWCASE_TILT;
+      const targetY = Math.round((rotY - 45) / 90) * 90 + 45;
+      rotX += (targetX - rotX) * SNAP_EASE;
+      rotY += (targetY - rotY) * SNAP_EASE;
+      if (Math.abs(targetX - rotX) < 0.25 && Math.abs(targetY - rotY) < 0.25) {
+        rotX = targetX; rotY = targetY;
+        snapping = false;
+        lastInteraction = now;
+      }
+    } else if (now - lastInteraction > IDLE_DELAY) {
+      rotY += IDLE_SPEED;
+    }
+    apply();
+  }, 16);
 }
 
 /* ---------------- Universal tilt + cursor-glow effect (barcha kartalar) ----------------

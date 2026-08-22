@@ -541,12 +541,12 @@ body.has-bg-image {
 .cube-face-icon-brand { filter: drop-shadow(0 4px 10px rgba(0,0,0,.5)); }
 .cube-face h4 { margin: 0; font-size: 15px; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,.4); }
 .cube-face p { margin: 0; font-size: 10.5px; line-height: 1.5; opacity: .9; }
-.cube-face-top    { background: linear-gradient(160deg, #1a3566, #0c1836); transform: rotateX(90deg) translateZ(calc(var(--cube-size) / 2)); }
-.cube-face-left   { background: linear-gradient(160deg, #0e6a86, #073042); transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2)); }
-.cube-face-right  { background: linear-gradient(160deg, #6423b8, #2c0d5c); transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2)); }
-.cube-face-front  { background: linear-gradient(160deg, #2c2270, #150f38); transform: translateZ(calc(var(--cube-size) / 2)); }
-.cube-face-back   { background: linear-gradient(160deg, #0d4a4a, #062626); transform: rotateY(180deg) translateZ(calc(var(--cube-size) / 2)); }
-.cube-face-bottom { background: linear-gradient(160deg, #26314a, #12172a); transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2)); }
+.cube-face-top    { background: linear-gradient(160deg, #2f6bff, #1a3d99); transform: rotateX(90deg) translateZ(calc(var(--cube-size) / 2)); }
+.cube-face-left   { background: linear-gradient(160deg, #06b6d4, #05748a); transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2)); }
+.cube-face-right  { background: linear-gradient(160deg, #a855f7, #6b21a8); transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2)); }
+.cube-face-front  { background: linear-gradient(160deg, #ec4899, #9d174d); transform: translateZ(calc(var(--cube-size) / 2)); }
+.cube-face-back   { background: linear-gradient(160deg, #22c55e, #15803d); transform: rotateY(180deg) translateZ(calc(var(--cube-size) / 2)); }
+.cube-face-bottom { background: linear-gradient(160deg, #f97316, #c2410c); transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2)); }
 .cube-rotate-hint-svg { display: block; margin: -6px auto 0; opacity: .8; }
 
 /* ---------- Students (Mening O'quvchilarim) ---------- */
