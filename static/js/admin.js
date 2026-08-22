@@ -260,8 +260,14 @@ function adminShellHtml(bodyHtml, username) {
   return `
     <div class="admin-wrap">
       <aside class="admin-sidebar">
-        <div class="admin-brand">Boshqaruv paneli</div>
-        <div class="admin-user">${esc2(username)}</div>
+        <div class="admin-brand-row">
+          <span class="admin-brand-icon">⚙️</span>
+          <span class="admin-brand">Boshqaruv paneli</span>
+        </div>
+        <div class="admin-user-row">
+          <span class="admin-user-avatar">${esc2(username.slice(0, 1))}</span>
+          <span class="admin-user">${esc2(username)}</span>
+        </div>
         <nav class="admin-nav" id="admin-nav">${navItems}</nav>
         <div class="admin-sidebar-footer">
           <a href="/" class="admin-link-muted">&larr; Saytga qaytish</a>
@@ -277,6 +283,7 @@ function loginScreenHtml(errorMsg) {
   return `
     <div class="admin-login-wrap">
       <form class="admin-login-card" id="admin-login-form">
+        <div class="admin-login-badge">🔐</div>
         <h1 class="admin-login-title">Admin panel</h1>
         <p class="admin-login-sub">Umarov-group boshqaruv paneliga kirish</p>
         ${errorMsg ? `<div class="alert alert-error">${esc2(errorMsg)}</div>` : ""}
@@ -403,10 +410,12 @@ async function openList(key) {
         ${cfg.readOnlyColumns ? "" : `<button class="btn-send" id="admin-add-btn">+ Yangi qo'shish</button>`}
       </div>
       <div id="admin-form-holder"></div>
-      <table class="admin-table">
-        <thead><tr>${cols.map(c => `<th>${esc2(c)}</th>`).join("")}<th></th></tr></thead>
-        <tbody>${rows || `<tr><td colspan="${cols.length + 1}" class="loading-text">Bo'sh</td></tr>`}</tbody>
-      </table>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead><tr>${cols.map(c => `<th>${esc2(c)}</th>`).join("")}<th></th></tr></thead>
+          <tbody>${rows || `<tr><td colspan="${cols.length + 1}" class="loading-text">Bo'sh</td></tr>`}</tbody>
+        </table>
+      </div>
     `;
 
     if (!cfg.readOnlyColumns) {
