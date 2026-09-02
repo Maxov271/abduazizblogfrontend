@@ -189,7 +189,11 @@ body.has-bg-image {
 }
 .contact-row:hover .contact-icon { background: var(--accent-soft); transform: scale(1.06); }
 .contact-icon svg { width: 20px; height: 20px; }
-.contact-label { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #9aa2b8; margin-bottom: 2px; }
+.contact-label {
+  font-size: 11px; letter-spacing: .06em; text-transform: uppercase; font-weight: 700;
+  color: var(--text-muted); margin-bottom: 2px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, .5);
+}
 .contact-value { font-size: 15px; font-weight: 500; color: var(--text-dark); word-break: break-word; }
 
 .social-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
