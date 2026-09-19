@@ -7,9 +7,11 @@ function decideAndMountApp() {
   const isAdmin = location.pathname.replace(/\/+$/, "") .match(/^\/admin(\/.*)?$/);
   if (isAdmin) {
     window.__activeApp = "admin";
+    document.documentElement.setAttribute("data-app", "admin");
     window.AdminApp.mount();
   } else {
     window.__activeApp = "public";
+    document.documentElement.setAttribute("data-app", "public");
     window.PublicApp.mount();
   }
 }

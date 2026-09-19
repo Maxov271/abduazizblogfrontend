@@ -1,3 +1,47 @@
+/* ---------- Admin uchun umumiy baza (ochiq sayt dizaynidan mustaqil) ---------- */
+:root {
+  --accent: #2f6bff;
+  --accent-soft: rgba(47, 107, 255, 0.14);
+  --text-dark: #1b2440;
+  --text-muted: #5b6478;
+  --card-bg: rgba(255, 255, 255, 0.72);
+  --shadow-soft: 0 20px 60px -20px rgba(24, 39, 92, 0.25);
+  --shadow-card: 0 10px 30px -14px rgba(24, 39, 92, 0.18);
+  --ease: cubic-bezier(.34, 1.56, .64, 1);
+}
+html[data-app="admin"] body {
+  margin: 0; min-height: 100vh; color: var(--text-dark);
+  font-family: "Poppins", "Inter", "Segoe UI", system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 15% 15%, #fbe8cf 0%, transparent 45%),
+    linear-gradient(135deg, #dce9ff 0%, #b9cdfa 35%, #5b7fe0 70%, #24408f 100%);
+  background-attachment: fixed;
+}
+html[data-app="admin"] * { box-sizing: border-box; }
+@keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn { 0% { opacity: 0; transform: scale(.9); } 100% { opacity: 1; transform: scale(1); } }
+.form-input, .form-textarea {
+  width: 100%; border: none; border-bottom: 1.5px solid #e3e7f3; background: transparent;
+  padding: 10px 4px; font-size: 15px; font-family: inherit; color: var(--text-dark);
+  transition: border-color .2s;
+}
+.form-input:focus, .form-textarea:focus { outline: none; border-color: var(--accent); }
+.form-textarea { resize: vertical; min-height: 110px; }
+.btn-send {
+  background: var(--accent); color: #fff; border: none; border-radius: 12px;
+  padding: 13px 26px; font-size: 15px; font-weight: 600; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 20px;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), opacity .2s;
+}
+.btn-send:hover { opacity: .95; transform: translateY(-2px); box-shadow: 0 10px 24px -8px var(--accent); }
+.btn-send:active { transform: translateY(0) scale(.97); }
+.alert { padding: 14px 18px; border-radius: 12px; margin-bottom: 20px; font-size: 14.5px; animation: popIn .3s var(--ease) both; }
+.alert-success { background: #e6f4ea; color: #1e7a3c; }
+.alert-error { background: #fdeaea; color: #b3261e; }
+.loading-text { color: var(--text-muted); font-style: italic; padding: 20px 0; animation: fadeIn .3s both; }
+
+
 /* ---------- Admin panel — premium dizayn ---------- */
 .admin-login-wrap {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
