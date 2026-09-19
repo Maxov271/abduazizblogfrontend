@@ -357,7 +357,7 @@
           </div>
           ${stats.length ? `<div class="ug-stats">${stats.map((s) => `<div class="ug-stat"><b data-count="${s.n}">0</b><span>${esc(s.l)}</span></div>`).join("")}</div>` : ""}
         </div>
-        <div class="ug-hero-art">
+        <div class="ug-hero-art${p.avatar ? " ug-hero-art-photo" : ""}">
           <div class="ug-ring"></div>
           <div class="ug-avatar-blob">${p.avatar ? `<img src="${esc(p.avatar)}" alt="${esc(p.display_name || p.full_name || "Umarov")}">` : "U"}</div>
           <div class="ug-chip ug-chip-1">🐍 Django</div>

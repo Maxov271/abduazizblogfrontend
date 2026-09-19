@@ -146,6 +146,12 @@ html[data-app="public"] .ug-pill-link:hover { background: var(--pg-accent-soft);
   display: grid; place-items: center; font-family: var(--ug-font-display); font-size: 96px; color: var(--pg-accent);
 }
 .ug-avatar-blob img, .ug-person-photo img, .ug-student-photo img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.72) contrast(.94); }
+/* Keng (≈1.6:1) suratli hero: shakl enini kengaytiriladi, burchaklar kamroq kesiladi, surat rangi o'zgarmaydi */
+@keyframes ug-morph-wide { 0%, 100% { border-radius: 16% 24% 18% 26% / 22% 18% 26% 20%; } 33% { border-radius: 24% 16% 26% 18% / 18% 26% 20% 24%; } 66% { border-radius: 20% 22% 16% 28% / 26% 20% 24% 18%; } }
+.ug-hero-art-photo .ug-ring, .ug-hero-art-photo .ug-chip { display: none; }
+.ug-hero-art-photo .ug-avatar-blob { width: 100%; aspect-ratio: 1586 / 992; animation-name: ug-morph-wide; background: var(--pg-bg2); }
+.ug-hero-art-photo .ug-avatar-blob img { filter: none; }
+@media (min-width: 960px) { .ug-hero-grid:has(.ug-hero-art-photo) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); } .ug-hero-grid:has(.ug-hero-art-photo) h1 { font-size: clamp(38px, 4.6vw, 72px); } }
 .ug-chip { position: absolute; padding: 11px 18px; border-radius: 999px; background: var(--pg-surface); box-shadow: var(--pg-shadow-sm); font-weight: 700; font-size: 14px; }
 .ug-chip-1 { top: 6%; left: 0; animation: ug-float 7s ease-in-out infinite; transform: translate3d(calc(var(--mx) * 34px), calc(var(--my) * 24px), 0); }
 .ug-chip-2 { bottom: 12%; right: 0; animation: ug-float 9s ease-in-out 1.2s infinite; transform: translate3d(calc(var(--mx) * -30px), calc(var(--my) * -20px), 0); }
