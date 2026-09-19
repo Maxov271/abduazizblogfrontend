@@ -52,6 +52,15 @@ const ADMIN_MODELS = {
     ],
     columns: ["title", "icon", "order"],
   },
+  "assistant-nudges": {
+    label: "AI bildirishnoma matnlari", endpoint: "/admin/assistant-nudges/",
+    fields: [
+      { name: "text", label: "Matn (qisqa, 200 belgigacha)", type: "text" },
+      { name: "is_active", label: "Faol", type: "bool" },
+      { name: "order", label: "Tartib", type: "number" },
+    ],
+    columns: ["text", "is_active", "order"],
+  },
   "inside-world": {
     label: "Inside World kartalari", endpoint: "/admin/inside-world/",
     fields: [
@@ -238,6 +247,11 @@ const SINGLETONS = {
       { name: "telegram_bot_token", label: "Telegram bot token", type: "text", section: "Telegram bildirishnomalari" },
       { name: "telegram_chat_id", label: "Telegram chat ID", type: "text", section: "Telegram bildirishnomalari" },
       { name: "cube_rotation_seconds", label: "Kubning bir to'liq aylanish vaqti (soniya)", type: "number", section: "3D Skills Cube" },
+      { name: "assistant_enabled", label: "AI yordamchi saytda ko'rinsin", type: "bool", section: "AI yordamchi" },
+      { name: "assistant_extra_info", label: "AI ga qo'shimcha ma'lumot (narxlar, ish vaqti, buyurtma tartibi...)", type: "textarea", section: "AI yordamchi" },
+      { name: "assistant_nudge_first_delay", label: "Birinchi bildirishnoma (soniya, saytga kirgandan keyin)", type: "number", section: "AI yordamchi" },
+      { name: "assistant_nudge_visible_seconds", label: "Bildirishnoma ko'rinib turish vaqti (soniya)", type: "number", section: "AI yordamchi" },
+      { name: "assistant_nudge_interval", label: "Bildirishnomalar orasidagi vaqt (soniya)", type: "number", section: "AI yordamchi" },
     ],
   },
   stats: {

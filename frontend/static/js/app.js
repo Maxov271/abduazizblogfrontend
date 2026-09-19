@@ -795,6 +795,9 @@
     applyTheme(currentTheme());
     bindGlobalListeners();
     render();
+    loadData().then((d) => {
+      if (window.UgAssistant) window.UgAssistant.mount(root.querySelector(".ug-shell"), d.settings);
+    });
   }
 
   window.PublicApp = { mount: mount };

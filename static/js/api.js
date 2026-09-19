@@ -47,4 +47,6 @@ const Api = {
   studentList: (category) => apiGet(`/students/${category && category !== "all" ? `?category=${encodeURIComponent(category)}` : ""}`),
   siteStats: () => apiGet("/stats/"),
   trackVisit: () => apiPost("/stats/track-visit/", {}),
+  assistantNudges: () => apiGet("/assistant/nudges/"),
+  assistantChat: (data) => apiPost("/assistant/chat/", data),
 };
