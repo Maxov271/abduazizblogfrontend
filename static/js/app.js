@@ -260,11 +260,6 @@
 
   function applySiteSettings(s) {
     if (s.site_name) document.title = s.site_name;
-    if (s.favicon) {
-      let link = document.querySelector("link[rel='icon']");
-      if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
-      link.href = s.favicon;
-    }
     if (s.meta_description) {
       let m = document.querySelector("meta[name='description']");
       if (!m) { m = document.createElement("meta"); m.name = "description"; document.head.appendChild(m); }
@@ -616,7 +611,7 @@
     <div class="ug-glow" id="ug-glow"></div>
     <div class="ug-shell">
       <header class="ug-header"><div class="ug-header-in">
-        <a class="ug-brand" href="#/"><span class="ug-mark">U</span><span class="ug-brand-name">Umarov Group</span></a>
+        <a class="ug-brand" href="#/"><span class="ug-mark" aria-hidden="true"></span><span class="ug-brand-name">Umarov Group</span></a>
         <nav class="ug-nav" id="ug-nav">${NAV.map((n) => `<a href="${n.href}" data-key="${n.key}">${esc(n.label)}</a>`).join("")}</nav>
         <div class="ug-actions">
           <button type="button" class="ug-theme-btn" id="ug-theme" aria-label="Rejimni almashtirish"></button>
@@ -631,7 +626,7 @@
   function footerHtml(d) {
     const rows = contactRows(d.profile);
     return `<div class="ug-footer-grid">
-      <div><a class="ug-brand" href="#/"><span class="ug-mark">U</span><span class="ug-brand-name">Umarov Group</span></a>
+      <div><a class="ug-brand" href="#/"><span class="ug-mark" aria-hidden="true"></span><span class="ug-brand-name">Umarov Group</span></a>
         <p>Web ishlab chiqish, Telegram botlar va IT ta'lim.</p></div>
       <div><h4>Sahifalar</h4><div class="ug-footer-links">${NAV.map((n) => `<a href="${n.href}">${esc(n.label)}</a>`).join("")}</div></div>
       <div><h4>Aloqa</h4><div class="ug-footer-links">

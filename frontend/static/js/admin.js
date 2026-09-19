@@ -276,8 +276,8 @@ function adminShellHtml(bodyHtml, username) {
     <div class="admin-wrap">
       <aside class="admin-sidebar">
         <div class="admin-brand-row">
-          <span class="admin-brand-icon">⚙️</span>
-          <span class="admin-brand">Boshqaruv paneli</span>
+          <span class="admin-brand-icon" aria-hidden="true"></span>
+          <span class="admin-brand">Umarov Group<small>Boshqaruv paneli</small></span>
         </div>
         <div class="admin-user-row">
           <span class="admin-user-avatar">${esc2(username.slice(0, 1))}</span>
@@ -301,7 +301,7 @@ function loginScreenHtml(errorMsg) {
   return `
     <div class="admin-login-wrap">
       <form class="admin-login-card" id="admin-login-form">
-        <div class="admin-login-badge">🔐</div>
+        <div class="admin-login-badge" role="img" aria-label="Umarov Group logotipi"></div>
         <h1 class="admin-login-title">Admin panel</h1>
         <p class="admin-login-sub">Umarov-group boshqaruv paneliga kirish</p>
         ${errorMsg ? `<div class="alert alert-error">${esc2(errorMsg)}</div>` : ""}

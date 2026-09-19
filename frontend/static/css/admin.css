@@ -12,7 +12,7 @@ html[data-app="admin"][data-ugtheme="dark"] {
 }
 html[data-app="admin"] body {
   margin: 0; min-height: 100vh; background: var(--pg-bg); color: var(--pg-ink);
-  font-family: "Figtree", system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  font-family: var(--ug-font-body); -webkit-font-smoothing: antialiased;
 }
 html[data-app="admin"] *, html[data-app="admin"] *::before, html[data-app="admin"] *::after { box-sizing: border-box; }
 html[data-app="admin"] ::selection { background: var(--pg-accent); color: var(--pg-onaccent); }
@@ -58,10 +58,10 @@ html[data-app="admin"] :focus-visible { outline: 2px solid var(--pg-accent); out
   box-shadow: var(--pg-shadow); animation: fadeInUp .6s var(--ug-ease-pop) both;
 }
 .admin-login-badge {
-  width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
-  font-size: 26px; background: var(--pg-accent-soft); box-shadow: var(--pg-shadow-sm);
+  width: 68px; height: 68px; margin: 0 auto 18px; background: var(--pg-ink);
+  -webkit-mask: url("/static/img/logo-mark.png") center / contain no-repeat; mask: url("/static/img/logo-mark.png") center / contain no-repeat;
 }
-.admin-login-title { font-family: var(--ug-font-display); font-weight: 400; font-size: 32px; margin: 0 0 6px; color: var(--pg-ink); text-align: center; }
+.admin-login-title { font-family: var(--ug-font-display); font-weight: 800; font-size: 32px; margin: 0 0 6px; color: var(--pg-ink); text-align: center; }
 .admin-login-sub { color: var(--pg-muted); margin: 0 0 26px; font-size: 14.5px; text-align: center; }
 
 /* ---------- Asosiy qobiq: yon panel + kontent ---------- */
@@ -73,10 +73,11 @@ html[data-app="admin"] :focus-visible { outline: 2px solid var(--pg-accent); out
 }
 .admin-brand-row { display: flex; align-items: center; gap: 11px; margin-bottom: 20px; padding: 0 8px; }
 .admin-brand-icon {
-  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  font-size: 18px; background: var(--pg-accent); box-shadow: var(--pg-shadow-sm);
+  width: 40px; height: 40px; flex-shrink: 0; background: var(--pg-ink);
+  -webkit-mask: url("/static/img/logo-mark.png") center / contain no-repeat; mask: url("/static/img/logo-mark.png") center / contain no-repeat;
 }
-.admin-brand { font-family: var(--ug-font-display); font-size: 19px; color: var(--pg-ink); line-height: 1.2; letter-spacing: .2px; }
+.admin-brand { font-family: var(--ug-font-display); font-weight: 800; font-size: 20px; color: var(--pg-ink); line-height: 1.15; letter-spacing: -.01em; display: flex; flex-direction: column; }
+.admin-brand small { font-family: var(--ug-font-body); font-weight: 600; font-size: 12.5px; letter-spacing: .02em; color: var(--pg-muted); margin-top: 2px; }
 .admin-user-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding: 10px 12px; border-radius: 999px; background: var(--pg-bg2); }
 .admin-user-avatar {
   width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
@@ -116,7 +117,7 @@ html[data-app="admin"] :focus-visible { outline: 2px solid var(--pg-accent); out
   flex: 1; min-width: 0; padding: 40px 48px; overflow-y: auto; max-height: 100vh;
   scrollbar-width: thin; scrollbar-color: var(--pg-line) transparent;
 }
-.admin-title { font-family: var(--ug-font-display); font-weight: 400; font-size: clamp(28px, 3vw, 38px); margin: 0 0 24px; color: var(--pg-ink); line-height: 1.1; animation: fadeInUp .4s var(--ug-ease-pop) both; }
+.admin-title { font-family: var(--ug-font-display); font-weight: 800; font-size: clamp(28px, 3vw, 38px); margin: 0 0 24px; color: var(--pg-ink); line-height: 1.1; animation: fadeInUp .4s var(--ug-ease-pop) both; }
 .admin-list-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 14px; }
 .admin-list-head .admin-title { margin-bottom: 0; }
 
@@ -146,7 +147,7 @@ html[data-app="admin"] :focus-visible { outline: 2px solid var(--pg-accent); out
   box-shadow: var(--pg-shadow-sm); border: 1px solid var(--pg-line); animation: fadeInUp .4s var(--ug-ease-pop) both;
 }
 .admin-form > h3, .admin-form > #admin-form-alert, .admin-form > .admin-form-actions, .admin-form > .btn-send { grid-column: 1 / -1; }
-.admin-form h3 { margin: 0 0 4px; font-family: var(--ug-font-display); font-weight: 400; font-size: 24px; color: var(--pg-ink); }
+.admin-form h3 { margin: 0 0 4px; font-family: var(--ug-font-display); font-weight: 800; font-size: 24px; color: var(--pg-ink); }
 .admin-span2 { grid-column: 1 / -1; }
 .admin-form-section {
   margin: 10px 0 -4px; padding-top: 20px; border-top: 1px solid var(--pg-line);

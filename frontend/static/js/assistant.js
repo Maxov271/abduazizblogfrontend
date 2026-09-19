@@ -64,7 +64,7 @@
       </div>
       <section class="ug-ai-panel" id="ug-ai-panel" role="dialog" aria-label="AI yordamchi" aria-modal="false" hidden>
         <header class="ug-ai-head">
-          <span class="ug-ai-avatar">${ICON.spark}</span>
+          <span class="ug-ai-avatar"><span class="ug-logo-mask" aria-hidden="true"></span></span>
           <div class="ug-ai-title"><b>Umarov AI yordamchi</b><span><i></i>Onlayn · tez javob beradi</span></div>
           <button type="button" class="ug-ai-x" aria-label="Chatni yopish">${ICON.close}</button>
         </header>
