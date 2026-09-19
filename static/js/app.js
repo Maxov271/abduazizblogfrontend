@@ -1,5 +1,5 @@
 /* Umarov Group — ochiq sayt (hash-router SPA).
-   Yo'llar: #/  #/haqida  #/xizmatlar  #/portfolio[/slug]  #/kurslar  #/jamoa
+   Yo'llar: #/  #/haqida  #/xizmatlar  #/portfolio[/slug]  #/jamoa
    #/oquvchilar  #/blog[/slug]  #/narxlar  #/resume  #/aloqa
    Eski yo'llar (#/about, #/thread, #/team, #/students) ham ishlaydi. */
 (function () {
@@ -11,7 +11,6 @@
     { label: "Men haqimda", href: "#/haqida", key: "about" },
     { label: "Xizmatlar", href: "#/xizmatlar", key: "services" },
     { label: "Portfolio", href: "#/portfolio", key: "portfolio" },
-    { label: "Kurslar", href: "#/kurslar", key: "courses" },
     { label: "Jamoa", href: "#/jamoa", key: "team" },
     { label: "O'quvchilar", href: "#/oquvchilar", key: "students" },
     { label: "Blog", href: "#/blog", key: "blog" },
@@ -20,20 +19,14 @@
   ];
   const SLUG_MAP = {
     haqida: "about", about: "about", xizmatlar: "services", portfolio: "portfolio",
-    blog: "blog", thread: "blog", resume: "resume", kurslar: "courses", narxlar: "pricing",
+    blog: "blog", thread: "blog", resume: "resume", narxlar: "pricing",
     aloqa: "contact", jamoa: "team", team: "team", oquvchilar: "students", students: "students",
   };
   const HERO_LEAD = "Umarov Group — Django asosidagi veb-ilovalar, Telegram botlar va IT ta'lim. Brifdan ishga tushirishgacha bitta jamoa bilan.";
   const MARQUEE = "PYTHON · DJANGO · REST API · TELEGRAM BOT · POSTGRESQL · DOCKER · NGINX · IT TA'LIM · ";
 
-  /* DIQQAT: kurslar va narxlar hozircha backendda yo'q — bu yerdagi matn va
+  /* DIQQAT: narxlar hozircha backendda yo'q — bu yerdagi matn va
      narxlar dizayn namunasidan olingan. Haqiqiy ma'lumotga almashtiring. */
-  const COURSES = [
-    { level: "Boshlang'ich", title: "Kompyuter savodxonligi", description: "Windows, internet, xavfsizlik va Microsoft Office asoslari. Ishga kirish uchun minimal baza.", duration: "2 oy", price: "450 000 so'm/oy" },
-    { level: "Boshlang'ich", title: "Web asoslari", description: "HTML, CSS va JavaScript. Kurs oxirida o'zingizning shaxsiy saytingiz tayyor bo'ladi.", duration: "3 oy", price: "550 000 so'm/oy" },
-    { level: "O'rta", title: "Python va Django", description: "Backend, ma'lumotlar bazasi, REST API va admin panel. Yakuniy loyiha — real veb-ilova.", duration: "5 oy", price: "700 000 so'm/oy" },
-    { level: "Amaliy", title: "Telegram bot yaratish", description: "Bot mantiqidan to'lov integratsiyasi va serverga joylashtirishgacha.", duration: "2 oy", price: "650 000 so'm/oy" },
-  ];
   const PLANS = [
     { name: "Vizitka", tagline: "Kichik biznes va shaxsiy sahifa uchun", price: "3 mln so'mdan", features: ["5 tagacha sahifa", "Mobil moslashuv", "Aloqa formasi + Telegram", "Domen va hosting sozlash"] },
     { name: "Biznes", tagline: "Katalog, blog va admin panel", price: "8 mln so'mdan", features: ["Cheksiz sahifa va bo'limlar", "Admin panel orqali kontent", "SEO asoslari va tezlik", "1 oy bepul qo'llab-quvvatlash"] },
@@ -477,19 +470,6 @@
         <a class="ug-btn ug-btn-ghost" href="#/aloqa">Shunday loyiha kerak</a>
       </div>
       ${p.gallery && p.gallery.length ? `<div class="ug-gallery">${p.gallery.map((g) => `<img src="${esc(g.image)}" alt="" loading="lazy">`).join("")}</div>` : ""}
-    </div></section>`;
-  };
-
-  views.courses = function () {
-    return `<section class="ug-page-sec"><div class="ug-w">
-      <span class="ug-eyebrow">Kurslar</span>
-      <h1 class="ug-h1" style="max-width:14ch">Noldan amaliyotgacha o'rgatamiz</h1>
-      <p class="ug-lead">Kichik guruhlar, haftada uch marta, har modul oxirida real loyiha. Dars materiallari va yozuvlar bir umrga ochiq qoladi.</p>
-      <div class="ug-grid" style="--min:290px;gap:24px;margin-top:52px">${COURSES.map((c) => `<div class="ug-card ug-course ug-lift" data-reveal>
-        <span class="ug-tag ug-tag-accent" style="align-self:flex-start">${esc(c.level)}</span>
-        <h3 class="ug-h3">${esc(c.title)}</h3><p>${esc(c.description)}</p>
-        <div class="ug-course-foot"><span>${esc(c.duration)}</span><b>${esc(c.price)}</b></div>
-      </div>`).join("")}</div>
     </div></section>`;
   };
 

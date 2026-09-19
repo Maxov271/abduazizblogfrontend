@@ -271,7 +271,10 @@ function adminShellHtml(bodyHtml, username) {
         </div>
         <nav class="admin-nav" id="admin-nav">${navItems}</nav>
         <div class="admin-sidebar-footer">
-          <a href="/" class="admin-link-muted">&larr; Saytga qaytish</a>
+          <div class="admin-footer-row">
+            <a href="/" class="admin-link-muted">&larr; Saytga qaytish</a>
+            <button type="button" class="admin-theme-btn" id="admin-theme" aria-label="Rejimni almashtirish"></button>
+          </div>
           <button class="admin-btn-logout" id="admin-logout">Chiqish</button>
         </div>
       </aside>
@@ -314,6 +317,7 @@ async function mountAdminApp() {
     const me = await res.json();
     root.innerHTML = adminShellHtml(`<p class="loading-text">Bo'limni tanlang.</p>`, me.username);
     bindAdminNav();
+    bindAdminTheme();
     document.getElementById("admin-logout").addEventListener("click", async () => {
       try { await adminFetch("/auth/logout/", { method: "POST" }); } catch (_) {}
       clearToken();
@@ -350,6 +354,18 @@ function bindLoginForm() {
       document.getElementById("app-root").innerHTML = loginScreenHtml("Server bilan bog'lanib bo'lmadi.");
       bindLoginForm();
     }
+  });
+}
+
+function bindAdminTheme() {
+  const btn = document.getElementById("admin-theme");
+  const paint = () => { btn.textContent = document.documentElement.getAttribute("data-ugtheme") === "dark" ? "☀" : "☾"; };
+  paint();
+  btn.addEventListener("click", () => {
+    const next = document.documentElement.getAttribute("data-ugtheme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-ugtheme", next);
+    try { localStorage.setItem("ug-theme", next); } catch (e) { /* ignore */ }
+    paint();
   });
 }
 

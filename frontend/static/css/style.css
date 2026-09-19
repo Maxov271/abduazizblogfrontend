@@ -223,12 +223,6 @@ html[data-app="public"] .ug-pill-link:hover { background: var(--pg-accent-soft);
 .ug-exp span { font-size: 13px; font-weight: 700; color: var(--pg-accent-ink); }
 .ug-exp h3 { font-size: 21px; margin: 8px 0; }
 .ug-exp p { margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--pg-muted); }
-.ug-course { display: flex; flex-direction: column; padding: 34px 30px; }
-.ug-course h3 { font-size: 23px; margin: 16px 0 10px; }
-.ug-course p { margin: 0 0 18px; font-size: 15.5px; line-height: 1.6; color: var(--pg-muted); }
-.ug-course-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 18px; border-top: 1px solid var(--pg-line); }
-.ug-course-foot span { font-size: 14.5px; color: var(--pg-muted); font-weight: 600; }
-.ug-course-foot b { font-family: var(--ug-font-display); font-weight: 400; font-size: 19px; color: var(--pg-accent); }
 .ug-plan { padding: 38px 32px; border-radius: 32px; box-shadow: var(--pg-shadow-sm); }
 .ug-plan h3 { font-size: 24px; margin: 0 0 6px; }
 .ug-plan > p { margin: 0 0 20px; font-size: 15px; color: var(--pg-muted); line-height: 1.55; }
