@@ -138,10 +138,10 @@ html[data-app="public"] .ug-pill-link:hover { background: var(--pg-accent-soft);
 .ug-stat:nth-child(2) b { color: var(--pg-accent2); }
 .ug-stat:nth-child(3) b { color: var(--pg-ink); }
 .ug-stat span { font-size: 13.5px; color: var(--pg-muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
-.ug-hero-art { position: relative; display: grid; place-items: center; min-height: 380px; }
-.ug-ring { position: absolute; width: min(430px, 88%); aspect-ratio: 1; border: 2px dashed var(--pg-accent); opacity: .35; border-radius: 50%; animation: ug-spin 34s linear infinite; }
+.ug-hero-art { position: relative; display: grid; place-items: center; min-height: 520px; }
+.ug-ring { position: absolute; width: min(645px, 108%); aspect-ratio: 1; border: 2px dashed var(--pg-accent); opacity: .35; border-radius: 50%; animation: ug-spin 34s linear infinite; }
 .ug-avatar-blob {
-  position: relative; width: min(370px, 80%); aspect-ratio: 1; overflow: hidden; background: var(--pg-accent2-soft);
+  position: relative; width: min(555px, 100%); aspect-ratio: 1; overflow: hidden; background: var(--pg-accent2-soft);
   animation: ug-morph 20s ease-in-out infinite; box-shadow: var(--pg-shadow); transform: translate3d(calc(var(--mx) * -14px), calc(var(--my) * -12px), 0);
   display: grid; place-items: center; font-family: var(--ug-font-display); font-size: 96px; color: var(--pg-accent);
 }
