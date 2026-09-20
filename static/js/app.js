@@ -678,6 +678,7 @@
     window.scrollTo({ top: 0, behavior: "auto" });
     if (page.animate) page.animate([{ opacity: 0, transform: "translateY(26px)" }, { opacity: 1, transform: "none" }], { duration: 560, easing: "cubic-bezier(.2,.8,.2,1)" });
     afterRender(route);
+    (window.dataLayer = window.dataLayer || []).push({ event: "spa_page_view", page_path: location.hash || "#/", page_title: document.title });
   }
 
   function afterRender(route) {
